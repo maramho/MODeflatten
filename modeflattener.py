@@ -161,23 +161,32 @@ def deflat(ad, func_info, loc_db):
 
         nop_addrs = find_state_var_usedefs(ircfg, state_var)
 
-        # 🔍 state_var 사용이 없는 경우 전체 블록 탐색
         if not nop_addrs:
             print(f"[WARNING] {hex(addr)}에서 state_var({state_var}) 사용 블록 없음. 전체 블록 탐색 중...")
             for blk_addr in ircfg.blocks:
-                nop_addrs += find_state_var_usedefs(ircfg, blk_addr)
+                real_addr = ircfg.loc_db.get_location_offset(blk_addr)
+                print(f"[DEBUG] 전체 블록 {hex(real_addr)}의 명령어 분석 중...")
+                for assignblk in ircfg.blocks[blk_addr]:
+                    print(f"[DEBUG] 명령어: {assignblk}")
+                    if "IRDst" in str(assignblk):
+                        target = list(assignblk.items())[0][1]
+                        print(f"[DEBUG] IRDst 발견: {assignblk}, 대상 주소: {hex(target.arg) if isinstance(target, ExprInt) else target}")
+                        diff = abs(target.arg - state_var_val) if isinstance(target, ExprInt) else None
+                        if diff is not None and diff <= tolerance:
+                            print(f"[DEBUG] IRDst가 state_var와 유사한 값입니다. (차이: {diff})")
+
+                        # ✅ 간접 참조 블록 탐지
+                        indirect_ref = ircfg.get_block(target.arg)
+                        if indirect_ref:
+                            print(f"[DEBUG] IRDst가 참조하는 간접 블록 발견: {hex(target.arg)}")
+                            for inner_blk in indirect_ref:
+                                print(f"[DEBUG] 간접 블록 명령어: {inner_blk}")
 
         if nop_addrs:
             rel_blk_info[addr] = (asmcfg, nop_addrs)
         else:
             print(f"[ERROR] state_var {state_var}를 사용하는 블록을 찾지 못했습니다.")
-
-    if not rel_blk_info:
-        print("[ERROR] state_var를 사용하는 블록을 찾지 못했습니다.")
-        return {}
-
-    print(f"[DEBUG] 패치할 블록 개수: {len(rel_blk_info)}")
-
+            
     # 🔥 패치 데이터 생성 (예제)
     patches = {}
     for addr, (asmcfg, nop_addrs) in rel_blk_info.items():

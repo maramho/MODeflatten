@@ -207,44 +207,66 @@ def find_var_asg(ircfg, var):
                     val_list += phi_vals
     return res, val_list
 
-
 def find_state_var_usedefs(ircfg, state_var):
     state_var_uses = []
-    state_var_val = str(state_var)
+    state_var_val = int(state_var)
+    tolerance = 0x200  # 허용 오프셋 확장
 
     for addr, irblock in ircfg.blocks.items():
-        # LocKey를 실제 오프셋으로 변환
-        if isinstance(addr, LocKey):
-            try:
-                real_addr = ircfg.loc_db.get_location_offset(addr)
-                print(f"[DEBUG] 전체 블록 스캔: {hex(real_addr)}")
-            except Exception as e:
-                print(f"[ERROR] LocKey 변환 실패: {e}")
-                continue
-        else:
-            real_addr = addr  # 이미 정수일 경우 변환 없이 사용
+        try:
+            real_addr = ircfg.loc_db.get_location_offset(addr)
+            print(f"[DEBUG] 전체 블록 스캔: {hex(real_addr)}")
+        except Exception as e:
+            print(f"[ERROR] LocKey 변환 실패: {e}")
+            continue
 
         for assignblk in irblock:
-            assign_str = str(assignblk)
+            print(f"[DEBUG] 명령어: {assignblk}")  # 모든 명령어 출력
 
-            # ✅ state_var가 직접적으로 사용된 경우
-            if state_var_val in assign_str:
-                state_var_uses.append(real_addr)
-                print(f"[DEBUG] 직접 사용 발견: {hex(real_addr)} → {assignblk}")
-
-            # ✅ JMP, XOR, ADD, SUB 명령어 탐지
-            if isinstance(assignblk, AssignBlock):
-                for dst, src in assignblk.items():
-                    if any(op in str(assignblk) for op in ["JMP", "XOR", "ADD", "SUB"]):
-                        if state_var_val in str(dst) or state_var_val in str(src):
-                            state_var_uses.append(real_addr)
-                            print(f"[DEBUG] 명령어({assignblk})에서 발견: {hex(real_addr)}")
-
-            # ✅ 메모리 참조 탐지
-            if any(isinstance(op, ExprMem) for op in assignblk.items()):
-                if state_var_val in assign_str:
+            for dst, src in assignblk.items():
+                # ✅ 직접 참조
+                if str(state_var_val) in str(dst) or str(state_var_val) in str(src):
                     state_var_uses.append(real_addr)
-                    print(f"[DEBUG] 메모리 참조 사용 발견: {hex(real_addr)} → {assignblk}")
+                    print(f"[DEBUG] 직접 사용 발견: {hex(real_addr)} → {assignblk}")
+
+                # ✅ IRDst 탐지 및 추적 강화
+                if "IRDst" in str(assignblk):
+                    irdst_target = list(assignblk.items())[0][1]
+                    print(f"[DEBUG] IRDst 분석 대상: {irdst_target}")
+                    if isinstance(irdst_target, ExprInt):
+                        diff = abs(irdst_target.arg - state_var_val)
+                        if diff <= tolerance:
+                            state_var_uses.append(real_addr)
+                            print(f"[DEBUG] IRDst 사용 발견 (허용 오프셋 내): {hex(real_addr)} → {assignblk}")
+                        else:
+                            print(f"[DEBUG] IRDst 값 차이({diff})가 허용 범위를 초과했습니다.")
+                    elif isinstance(irdst_target, ExprId):
+                        print(f"[DEBUG] IRDst가 식별자: {irdst_target}")
+
+                # ✅ MOV 명령어 탐지 (레지스터 포함)
+                if hasattr(assignblk, 'name') and assignblk.name == 'MOV':
+                    if (isinstance(src, ExprInt) and abs(src.arg - state_var_val) <= tolerance) or \
+                       (isinstance(dst, ExprInt) and abs(dst.arg - state_var_val) <= tolerance):
+                        state_var_uses.append(real_addr)
+                        print(f"[DEBUG] MOV 명령어 발견: {assignblk}")
+
+                # ✅ 메모리 참조 탐지 (간접 참조 추가)
+                if isinstance(dst, ExprMem) or isinstance(src, ExprMem):
+                    mem_expr = dst if isinstance(dst, ExprMem) else src
+                    if str(state_var_val) in str(mem_expr):
+                        state_var_uses.append(real_addr)
+                        print(f"[DEBUG] 메모리 참조 사용 발견: {hex(real_addr)} → {assignblk}")
+                    elif isinstance(mem_expr, ExprInt):
+                        diff = abs(mem_expr.arg - state_var_val)
+                        if diff <= tolerance:
+                            state_var_uses.append(real_addr)
+                            print(f"[DEBUG] 메모리 오프셋 사용 발견: {hex(real_addr)} → {assignblk}")
+
+                # ✅ 복합 연산 탐지 (ADD, SUB, XOR, CMP, AND, OR, TEST)
+                if hasattr(assignblk, 'name') and assignblk.name in ["ADD", "SUB", "XOR", "CMP", "AND", "OR", "TEST"]:
+                    if any(isinstance(op, ExprInt) and abs(op.arg - state_var_val) <= tolerance for op in [dst, src]):
+                        state_var_uses.append(real_addr)
+                        print(f"[DEBUG] 복합 연산 사용 발견: {hex(real_addr)} → {assignblk}")
 
     if not state_var_uses:
         print(f"[WARNING] state_var {state_var} 사용 주소를 찾지 못했습니다.")
@@ -253,86 +275,60 @@ def find_state_var_usedefs(ircfg, state_var):
 
 
 
+
+
+
 def resolve_jump_target(asmcfg, loc_db, jmp_target):
-    """
-    JMP 대상이 loc_key_* 또는 QWORD PTR [RIP + offset]일 경우, 실제 점프 주소를 반환하는 함수
-    """
-    # loc_key_* 처리
+    # 🔥 loc_key_* 처리
     if isinstance(jmp_target, ExprId) and 'loc_key' in str(jmp_target):
+        loc_key = str(jmp_target)
         try:
-            target_offset = int(str(jmp_target).split('_')[-1], 16)
-            print(f"[DEBUG] loc_key 변환 성공: {jmp_target} → {hex(target_offset)}")
+            target_offset = loc_db.get_location_offset(loc_key)
+            print(f"[DEBUG] loc_key 변환 성공: {loc_key} → {hex(target_offset)}")
             return target_offset
-        except ValueError:
-            print(f"[ERROR] loc_key 변환 실패: {jmp_target}")
+        except Exception as e:
+            print(f"[ERROR] loc_key 변환 실패: {loc_key}, 에러: {e}")
             return None
 
-    # QWORD PTR [RIP + offset] 처리
+    # 🔥 QWORD PTR [RIP + offset] 처리
     elif isinstance(jmp_target, ExprMem) and "RIP" in str(jmp_target):
         try:
-            rip_offset = int(str(jmp_target).split("+")[1].split("]")[0], 16)
-            base_addresses = [block.loc_key for block in asmcfg.blocks]
+            print(f"[DEBUG] JMP 대상: {jmp_target}")
+            rip_offset_str = str(jmp_target).split("+")[1].split("]")[0]
+            print(f"[DEBUG] 추출된 RIP 오프셋 문자열: {rip_offset_str}")
 
-            if base_addresses:
-                base_address = base_addresses[0]
+            rip_offset = int(rip_offset_str.strip(), 16)
+            print(f"[DEBUG] RIP 오프셋 (정수): {hex(rip_offset)}")
 
-                # ✅ LocKey인지 확인
-                if isinstance(base_address, LocKey):
-                    rip_base = loc_db.get_location_offset(base_address)
+            base_blocks = list(asmcfg.blocks)
+            print(f"[DEBUG] base_blocks: {base_blocks}")
+
+            if base_blocks:
+                base_block = base_blocks[0]
+                print(f"[DEBUG] base_block 정보: {base_block}")
+
+                # LocKey가 존재하는지 확인
+                if hasattr(base_block, 'loc_key'):
+                    rip_base = loc_db.get_location_offset(base_block.loc_key)
+                    print(f"[DEBUG] RIP base: {hex(rip_base)}")
+
+                    resolved_addr = rip_base + rip_offset
+                    print(f"[DEBUG] RIP 기반 JMP 변환 성공: {jmp_target} → {hex(resolved_addr)}")
+                    return resolved_addr
                 else:
-                    rip_base = base_address  # 이미 정수일 경우 변환 없이 사용
-
-                resolved_addr = rip_base + rip_offset
-                print(f"[DEBUG] RIP 기반 JMP 변환 성공: {jmp_target} → {hex(resolved_addr)}")
-                return resolved_addr
+                    print("[ERROR] base_block에 loc_key 속성이 없습니다.")
+                    return None
             else:
-                print("[WARNING] base_addresses가 비어 있습니다.")
+                print("[WARNING] base_blocks가 비어 있습니다.")
                 return None
 
+        except AttributeError as ae:
+            print(f"[ERROR] AttributeError 발생: {ae}")
+        except ValueError as ve:
+            print(f"[ERROR] ValueError 발생: {ve}")
         except Exception as e:
-            print(f"[ERROR] RIP 기반 JMP 변환 실패: {e}")
-            return None
+            print(f"[ERROR] RIP 기반 JMP 변환 실패: {jmp_target}, 에러: {e}")
 
-    return None
-
-
-        
-    
-    if isinstance(jmp_target, ExprId):
-        print(f"[DEBUG] JMP 대상이 식별자: {jmp_target}")
-        for block in asmcfg.blocks:
-            for instr in block.lines:
-                if instr.name == "MOV":
-                    args = instr.get_args_expr()
-                    if len(args) == 2 and args[0] == jmp_target:
-                        if isinstance(args[1], ExprInt):
-                            print(f"[DEBUG] loc_key 변환: {jmp_target} → {hex(args[1].arg)}")
-                            return args[1].arg  # 실제 주소 반환
         return None
 
-    # QWORD PTR [RIP + offset]과 같은 경우
-    elif isinstance(jmp_target, ExprMem):
-        if "RIP" in str(jmp_target):
-            try:
-                # RIP + offset 계산
-                rip_offset = int(str(jmp_target).split("+")[1].split("]")[0], 16)
-
-                # 🔥 수정된 부분: 딕셔너리가 아닌 리스트로 처리
-                base_addresses = loc_db.offsets  # 이미 리스트 형태로 되어 있음
-
-                if not base_addresses:
-                    print(f"[ERROR] loc_db.offsets에 유효한 주소가 없습니다.")
-                    return None
-
-                rip_base = loc_db.get_location_offset(base_addresses[0])  # LocKey를 오프셋으로 변환
-                resolved_addr = rip_base + rip_offset
-
-                print(f"[DEBUG] RIP 기반 JMP 변환 성공: {jmp_target} → {hex(resolved_addr)}")
-                return resolved_addr
-
-            except (ValueError, IndexError, AttributeError) as e:
-                print(f"[ERROR] RIP 기반 JMP 변환 실패: {e}")
-                return None
-
-
-
+    return None
