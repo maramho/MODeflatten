@@ -160,34 +160,77 @@ def deflat(ad, func_info, loc_db):
         ircfg_simplifier.simplify(ircfg, addr)
 
         nop_addrs = find_state_var_usedefs(ircfg, state_var)
+        rel_blk_info[addr] = (asmcfg, nop_addrs)
 
-        if not nop_addrs:
-            print(f"[WARNING] {hex(addr)}에서 state_var({state_var}) 사용 블록 없음. 전체 블록 탐색 중...")
-            for blk_addr in ircfg.blocks:
-                real_addr = ircfg.loc_db.get_location_offset(blk_addr)
-                print(f"[DEBUG] 전체 블록 {hex(real_addr)}의 명령어 분석 중...")
-                for assignblk in ircfg.blocks[blk_addr]:
-                    print(f"[DEBUG] 명령어: {assignblk}")
-                    if "IRDst" in str(assignblk):
-                        target = list(assignblk.items())[0][1]
-                        print(f"[DEBUG] IRDst 발견: {assignblk}, 대상 주소: {hex(target.arg) if isinstance(target, ExprInt) else target}")
-                        diff = abs(target.arg - state_var_val) if isinstance(target, ExprInt) else None
-                        if diff is not None and diff <= tolerance:
-                            print(f"[DEBUG] IRDst가 state_var와 유사한 값입니다. (차이: {diff})")
+        head = loc_db.get_offset_location(addr)
+        ssa_simplifier = IRCFGSimplifierSSA(lifter)
+        ssa = ssa_simplifier.ircfg_to_ssa(ircfg, head)
+        #we only use do_propagate_expressions ssa simp pass
+        ssa_simplifier.do_propagate_expressions(ssa, head)
+        #save_cfg(ircfg, 'ssa_%x'%addr)
 
-                        # ✅ 간접 참조 블록 탐지
-                        indirect_ref = ircfg.get_block(target.arg)
-                        if indirect_ref:
-                            print(f"[DEBUG] IRDst가 참조하는 간접 블록 발견: {hex(target.arg)}")
-                            for inner_blk in indirect_ref:
-                                print(f"[DEBUG] 간접 블록 명령어: {inner_blk}")
+        # find the possible values of the state variable
+        var_asg, tmpval_list = find_var_asg(ircfg, {state_var})
+        # adding all the possible values to a global list
+        val_list += tmpval_list
 
-        if nop_addrs:
-            rel_blk_info[addr] = (asmcfg, nop_addrs)
+        # checking the type of relevant blocks on the basis of no. of possible values
+        if len(var_asg) == 1:
+            var_asg['next'] = hex(var_asg['next'])
+        elif len(var_asg) > 1:
+            #extracting the condition from the last 3rd line
+            cond_mnem = list(asmcfg.blocks)[-1].lines[-3].name
+            _log.debug('cond used: %s' % cond_mnem)
+            var_asg['cond'] = cond_mnem
+            var_asg['true_next'] = hex(var_asg['true_next'])
+            var_asg['false_next'] = hex(var_asg['false_next'])
+
+        # map the conditions and possible values dictionary to the cfg info
+        fixed_cfg[hex(addr)] = var_asg
+        _log.debug('%#x %s' % (addr, var_asg))
+
+    _log.debug('val_list: ' + ', '.join([hex(val) for val in val_list]))
+
+    # get the value for reaching a particular relevant block
+    for lbl, irblock in viewitems(main_ircfg.blocks):
+        for assignblk in irblock:
+            dst, src = assignblk.items()[0]
+            if isinstance(src, ExprOp):
+                if src.op == 'FLAG_EQ_CMP':
+                    arg = src.args[1]
+                    if isinstance(arg, ExprInt):
+                        if int(arg) in val_list:
+                            cmp_val = int(arg)
+                            var, locs = irblock[-1].items()[0]
+                            true_dst = main_ircfg.loc_db.get_location_offset(locs.src1.loc_key)
+                            backbone[hex(cmp_val)] = hex(true_dst)
+
+    _log.debug('***** BACKBONE *****\n' + pprint.pformat(backbone))
+
+    for offset, link in fixed_cfg.items():
+        if 'cond' in link:
+            tval = fixed_cfg[offset]['true_next']
+            fval = fixed_cfg[offset]['false_next']
+            fixed_cfg[offset]['true_next'] = backbone[tval]
+            fixed_cfg[offset]['false_next'] = backbone[fval]
+        elif 'next' in link:
+            fixed_cfg[offset]['next'] = backbone[link['next']]
         else:
-            print(f"[ERROR] state_var {state_var}를 사용하는 블록을 찾지 못했습니다.")
-            
-    # 🔥 패치 데이터 생성 (예제)
+            # the tail doesn't has any condition
+            tail = int(offset, 16)
+
+    # remove the tail from cfg and unmark it as a relevant block
+    fixed_cfg.pop(hex(tail))
+    rel_blk_info.pop(tail)
+    _log.debug('removed tail @%#x from relevant_blocks' % tail)
+
+    _log.debug('******FIXED CFG*******\n' + pprint.pformat(fixed_cfg))
+
+    tail = main_asmcfg.getby_offset(tail).lines[-1]
+    # get the backbone info from dispatcher and tail
+    backbone_start, backbone_end = dispatcher, tail.offset + tail.l
+    _log.debug('backbone_start = %#x, backbone_end = %#x' % (backbone_start, backbone_end))
+
     patches = {}
     for addr, (asmcfg, nop_addrs) in rel_blk_info.items():
         for nop_addr in nop_addrs:
@@ -214,7 +257,7 @@ if __name__ == '__main__':
     _log = setup_logger(loglevel)
 
     deobf_start_time = time.time()
-    
+
     forg = open(args.filename, 'rb')
     fpatch = open(args.patch_filename, 'wb')
     fpatch.write(forg.read())
@@ -223,10 +266,10 @@ if __name__ == '__main__':
 
     global cont
     cont = Container.from_stream(open(args.filename, 'rb'), loc_db)
-    
+
     supported_arch = ['x86_32', 'x86_64']
     _log.info("Architecture : %s"  % cont.arch)
-    
+
     if cont.arch not in supported_arch:
         _log.error("Architecture unsupported : %s" % cont.arch)
         exit(1)
@@ -294,14 +337,9 @@ if __name__ == '__main__':
             fcn_start_time = time.time()
             patches = deflat(ad, all_funcs_blocks[ad], loc_db)
 
-            if patches:
-                for offset, data in patches.items():
-                    # LocKey를 정수형 오프셋으로 변환
-                    if isinstance(offset, LocKey):
-                        offset = loc_db.get_location_offset(offset)
-                    fpatch.seek(offset - bin_base_addr)
-                    
-                    #fpatch.write(data)
+            for offset, data in patches.items():
+                fpatch.seek(offset - bin_base_addr)
+                fpatch.write(data)
 
                 fcn_end_time = time.time() - fcn_start_time
                 _log.info("PATCHING SUCCESSFUL for function @ %#x (%.2f secs)\n" % (ad, fcn_end_time))
@@ -309,9 +347,7 @@ if __name__ == '__main__':
                 _log.error("PATCHING UNSUCCESSFUL for function @ %#x\n" % ad)
 
         else:
-            _log.error(f"[ERROR] unable to deobfuscate func {hex(ad)} (cff score = {score})")
-
-
+            _log.error("unable to deobfuscate func %#x (cff score = %f)" % (ad, score))
 
     fpatch.close()
     deobf_end_time = time.time() - deobf_start_time
