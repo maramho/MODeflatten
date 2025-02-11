@@ -10,6 +10,15 @@ from miasm.analysis.data_flow import ReachingDefinitions,\
     DiGraphDefUse
 
 import logging
+from miasm.ir.ir import *
+# from miasm.ir.ir import IRJump
+
+
+class IRJump:
+    """IRJump 클래스가 miasm.ir.ir에 없을 경우 직접 정의"""
+    def __init__(self, expr):
+        self.expr = expr
+
 
 _log = logging.getLogger('modeflattener')
 
@@ -78,25 +87,59 @@ def patch_gen(instrs, loc_db, nop_addrs, link):
 
     return final_patch
 
+def get_cff_info(asmcfg, loc_db):
+    print("[DEBUG] get_cff_info() 실행 시작")
 
-def get_cff_info(asmcfg):
-    preds = {}
-    for blk in asmcfg.blocks:
-        offset = asmcfg.loc_db.get_location_offset(blk.loc_key)
-        preds[offset] = asmcfg.predecessors(blk.loc_key)
-    # pre-dispatcher is the one with max predecessors
-    pre_dispatcher = sorted(preds, key=lambda key: len(preds[key]), reverse=True)[0]
-    # dispatcher is the one which suceeds pre-dispatcher
-    dispatcher = asmcfg.successors(asmcfg.loc_db.get_offset_location(pre_dispatcher))[0]
-    dispatcher = asmcfg.loc_db.get_location_offset(dispatcher)
+    relevant_blocks = set()
+    dispatcher = None
+    pre_dispatcher = None
+    jmp_blocks = []
 
-    # relevant blocks are those which preceed the pre-dispatcher
-    relevant_blocks = []
-    for loc in preds[pre_dispatcher]:
-        offset = asmcfg.loc_db.get_location_offset(loc)
-        relevant_blocks.append(get_block_father(asmcfg, offset))
+    for block in asmcfg.blocks:
+        if not block.lines:
+            continue  # 빈 블록 건너뛰기
+
+        block_addr = loc_db.get_location_offset(block.loc_key)
+        print(f"[DEBUG] 블록: {hex(block_addr)}")
+
+        for instr in block.lines:
+            if "MOV" in instr.name:
+                args = instr.get_args_expr()
+                if args and len(args) > 1 and isinstance(args[0], ExprMem) and isinstance(args[1], ExprInt):
+                    print(f"[DEBUG] 찾은 MOV: {instr}")
+                    relevant_blocks.add(block_addr)
+
+            if "JMP" in instr.name:
+                print(f"[DEBUG] 찾은 JMP: {instr}")
+                relevant_blocks.add(block_addr)
+                jmp_blocks.append(block_addr)
+
+    if not relevant_blocks:
+        print("[WARNING] relevant_blocks를 찾지 못했으므로, 전체 블록을 스캔합니다.")
+        relevant_blocks = {block.lines[0].offset for block in asmcfg.blocks if block.lines}
+
+    relevant_blocks = sorted(relevant_blocks)
+
+    # 🔥 JMP가 있는 블록 중 가장 먼저 나오는 블록을 dispatcher로 설정
+    if jmp_blocks:
+        dispatcher = jmp_blocks[0]  # ✅ 가장 먼저 등장하는 JMP 블록을 dispatcher로 설정
+    else:
+        dispatcher = relevant_blocks[0] if relevant_blocks else None
+
+    pre_dispatcher = relevant_blocks[1] if len(relevant_blocks) >= 2 else None
+
+    print(f"[DEBUG] get_cff_info() 종료, relevant_blocks 개수: {len(relevant_blocks)}")
+    print(f"[DEBUG] dispatcher: {dispatcher}, pre_dispatcher: {pre_dispatcher}")
 
     return relevant_blocks, dispatcher, pre_dispatcher
+
+
+
+
+
+
+
+
 
 
 # do backwards search for jmp instruction to find start of relevant block
@@ -104,13 +147,18 @@ def get_block_father(asmcfg, blk_offset):
     blk = asmcfg.getby_offset(blk_offset)
     checklist = [blk.loc_key]
 
-    pred = asmcfg.predecessors(blk.loc_key)[0]
+    pred = asmcfg.predecessors(blk.loc_key)
+    if not pred:
+        _log.error(f"ERROR: Block at {hex(blk_offset)} has no predecessors! Returning original block.")
+        return blk_offset  # 오류 방지를 위해 원래 블록 반환
+
+    pred = pred[0]  # 기존 코드
     while True:
         curr_bloc = asmcfg.loc_key_to_block(pred)
         if curr_bloc.lines[-1].name in ['JZ', 'JMP', 'JNZ']:
             break
         checklist.append(pred)
-        pred = asmcfg.predecessors(curr_bloc.loc_key)[0]
+        pred = asmcfg.predecessors(curr_bloc.loc_key)[0] if asmcfg.predecessors(curr_bloc.loc_key) else pred
 
     return asmcfg.loc_db.get_location_offset(checklist[-1])
 
@@ -160,13 +208,115 @@ def find_var_asg(ircfg, var):
     return res, val_list
 
 
-def find_state_var_usedefs(ircfg, search_var):
-    var_addrs = set()
-    reachings = ReachingDefinitions(ircfg)
-    digraph = DiGraphDefUse(reachings)
-    # the state var always a leaf
-    for leaf in digraph.leaves():
-        if leaf.var == search_var:
-            for x in (digraph.reachable_parents(leaf)):
-                var_addrs.add(ircfg.get_block(x.label)[x.index].instr.offset)
-    return var_addrs
+def find_state_var_usedefs(ircfg, state_var):
+    state_var_uses = []
+    state_var_val = str(state_var)
+
+    for addr, irblock in ircfg.blocks.items():
+        # 🔥 LocKey를 실제 오프셋으로 변환
+        try:
+            real_addr = ircfg.loc_db.get_location_offset(addr)
+            print(f"[DEBUG] 전체 블록 스캔: {hex(real_addr)}")  # 오프셋으로 변환 후 출력
+        except Exception as e:
+            print(f"[ERROR] LocKey 변환 실패: {e}")
+            continue
+
+        for assignblk in irblock:
+            for dst, src in assignblk.items():
+                # ✅ 직접 참조
+                if state_var_val in str(dst) or state_var_val in str(src):
+                    state_var_uses.append(real_addr)
+                    print(f"[DEBUG] 직접 사용 발견: {hex(real_addr)} → {assignblk}")
+
+                # ✅ 메모리 참조
+                if isinstance(dst, ExprMem) or isinstance(src, ExprMem):
+                    mem_expr = dst if isinstance(dst, ExprMem) else src
+                    if state_var_val in str(mem_expr):
+                        state_var_uses.append(real_addr)
+                        print(f"[DEBUG] 메모리 참조 사용 발견: {hex(real_addr)} → {assignblk}")
+
+                # ✅ 간접 JMP 명령어 탐지
+                if "JMP" in str(assignblk):
+                    jmp_target = list(assignblk.items())[0][1]
+                    if isinstance(jmp_target, ExprInt) and int(jmp_target) == int(state_var):
+                        state_var_uses.append(real_addr)
+                        print(f"[DEBUG] JMP 대상에서 발견: {hex(real_addr)} → {assignblk}")
+
+                # ✅ XOR, ADD, SUB 등 복합 연산 탐지
+                if hasattr(assignblk, 'name') and assignblk.name in ["XOR", "ADD", "SUB"]:
+                    if state_var_val in str(dst) or state_var_val in str(src):
+                        state_var_uses.append(real_addr)
+                        print(f"[DEBUG] 복합 연산 사용 발견: {hex(real_addr)} → {assignblk}")
+
+    if not state_var_uses:
+        print(f"[WARNING] state_var {state_var} 사용 주소를 찾지 못했습니다.")
+
+    return state_var_uses
+
+
+
+
+
+# mod_utils.py의 resolve_jump_target 함수 수정
+def resolve_jump_target(asmcfg, loc_db, jmp_target):
+    if isinstance(jmp_target, ExprId) and 'loc_key' in str(jmp_target):
+        try:
+            # 🔥 loc_key_* 숫자 추출
+            target_offset = int(str(jmp_target).split('_')[-1])  
+            
+            # 🔥 loc_db에서 정확한 주소 찾기 시도
+            loc_key = [key for key in loc_db.offsets if key.offset == target_offset]
+            if loc_key:
+                resolved_addr = loc_db.get_location_offset(loc_key[0])
+                print(f"[DEBUG] loc_key 변환 성공: {jmp_target} → {hex(resolved_addr)}")
+                return resolved_addr
+
+            # 🔥 loc_db에 없으면 기본값 사용
+            print(f"[WARNING] loc_db에 {jmp_target}가 없음, 기본값 사용")
+            return target_offset
+
+        except ValueError:
+            print(f"[ERROR] loc_key 변환 실패: {jmp_target}")
+            return None
+
+
+        
+    
+    if isinstance(jmp_target, ExprId):
+        print(f"[DEBUG] JMP 대상이 식별자: {jmp_target}")
+        for block in asmcfg.blocks:
+            for instr in block.lines:
+                if instr.name == "MOV":
+                    args = instr.get_args_expr()
+                    if len(args) == 2 and args[0] == jmp_target:
+                        if isinstance(args[1], ExprInt):
+                            print(f"[DEBUG] loc_key 변환: {jmp_target} → {hex(args[1].arg)}")
+                            return args[1].arg  # 실제 주소 반환
+        return None
+
+    # QWORD PTR [RIP + offset]과 같은 경우
+    elif isinstance(jmp_target, ExprMem):
+        if "RIP" in str(jmp_target):
+            try:
+                # RIP + offset 계산
+                rip_offset = int(str(jmp_target).split("+")[1].split("]")[0], 16)
+
+                # 🔥 수정된 부분: 딕셔너리가 아닌 리스트로 처리
+                base_addresses = loc_db.offsets  # 이미 리스트 형태로 되어 있음
+
+                if not base_addresses:
+                    print(f"[ERROR] loc_db.offsets에 유효한 주소가 없습니다.")
+                    return None
+
+                rip_base = base_addresses[0]  # 첫 번째 유효 주소 사용
+                resolved_addr = rip_base + rip_offset
+
+                print(f"[DEBUG] RIP 기반 JMP 변환 성공: {jmp_target} → {hex(resolved_addr)}")
+                return resolved_addr
+
+            except (ValueError, IndexError, AttributeError) as e:
+                print(f"[ERROR] RIP 기반 JMP 변환 실패: {e}")
+                return None
+
+
+

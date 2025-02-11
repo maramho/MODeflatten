@@ -1,0 +1,821 @@
+[DEBUG] Flattening Score: 0.9923273657289002
+[DEBUG] Function 0x1150 Flattening Score: 0.9923273657289002
+-------------------------
+|    func : 0x1150    |
+-------------------------
+[DEBUG] deflat() 실행 중: 0x1150
+[DEBUG] get_cff_info() 실행 시작
+[DEBUG] 블록: 0x1150
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x2C], 0x0
+[DEBUG] 블록: 0x116a
+[DEBUG] 블록: 0x117d
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x24], 0x0
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x20], 0x0
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x30], 0x1535C
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x1e62
+[DEBUG] 블록: 0x13c9
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x1e7d
+[DEBUG] 찾은 JMP: JMP        loc_key_35
+[DEBUG] 블록: 0x1e82
+[DEBUG] 블록: 0x1e91
+[DEBUG] 찾은 JMP: JMP        loc_key_38
+[DEBUG] 블록: 0x1404
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x30], 0xCAB1
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x1e96
+[DEBUG] 블록: 0x1a31
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x1ea5
+[DEBUG] 찾은 JMP: JMP        loc_key_41
+[DEBUG] 블록: 0x1eaa
+[DEBUG] 블록: 0x1eb9
+[DEBUG] 찾은 JMP: JMP        loc_key_44
+[DEBUG] 블록: 0x1775
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x1ebe
+[DEBUG] 블록: 0x1ecd
+[DEBUG] 찾은 JMP: JMP        loc_key_47
+[DEBUG] 블록: 0x1b55
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x1ed2
+[DEBUG] 블록: 0x1ee1
+[DEBUG] 찾은 JMP: JMP        loc_key_50
+[DEBUG] 블록: 0x1d0b
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x1ee6
+[DEBUG] 블록: 0x1ef5
+[DEBUG] 찾은 JMP: JMP        loc_key_53
+[DEBUG] 블록: 0x19bd
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x1efa
+[DEBUG] 블록: 0x1f09
+[DEBUG] 찾은 JMP: JMP        loc_key_56
+[DEBUG] 블록: 0x1807
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x1f0e
+[DEBUG] 블록: 0x19ca
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x1f1d
+[DEBUG] 찾은 JMP: JMP        loc_key_59
+[DEBUG] 블록: 0x1f22
+[DEBUG] 블록: 0x1f31
+[DEBUG] 찾은 JMP: JMP        loc_key_62
+[DEBUG] 블록: 0x11e2
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x1f36
+[DEBUG] 블록: 0x1e5a
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 블록: 0x1f45
+[DEBUG] 찾은 JMP: JMP        loc_key_65
+[DEBUG] 블록: 0x1f4a
+[DEBUG] 블록: 0x1f59
+[DEBUG] 찾은 JMP: JMP        loc_key_68
+[DEBUG] 블록: 0x1397
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x30], 0x14125
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x1f5e
+[DEBUG] 블록: 0x187b
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x1f6d
+[DEBUG] 찾은 JMP: JMP        loc_key_71
+[DEBUG] 블록: 0x1f72
+[DEBUG] 블록: 0x1ce0
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x1f81
+[DEBUG] 찾은 JMP: JMP        loc_key_74
+[DEBUG] 블록: 0x1f86
+[DEBUG] 블록: 0x12f3
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x30], 0x1ED3
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x1f95
+[DEBUG] 찾은 JMP: JMP        loc_key_77
+[DEBUG] 블록: 0x1f9a
+[DEBUG] 블록: 0x1981
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x1fa9
+[DEBUG] 찾은 JMP: JMP        loc_key_80
+[DEBUG] 블록: 0x1fae
+[DEBUG] 블록: 0x1382
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x30], 0x9580
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x1fbd
+[DEBUG] 찾은 JMP: JMP        loc_key_83
+[DEBUG] 블록: 0x1fc2
+[DEBUG] 블록: 0x1651
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x1fd1
+[DEBUG] 찾은 JMP: JMP        loc_key_86
+[DEBUG] 블록: 0x1fd6
+[DEBUG] 블록: 0x1793
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x1fe5
+[DEBUG] 찾은 JMP: JMP        loc_key_89
+[DEBUG] 블록: 0x1fea
+[DEBUG] 블록: 0x1ff9
+[DEBUG] 찾은 JMP: JMP        loc_key_92
+[DEBUG] 블록: 0x1b2a
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x1ffe
+[DEBUG] 블록: 0x200d
+[DEBUG] 찾은 JMP: JMP        loc_key_95
+[DEBUG] 블록: 0x199f
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2012
+[DEBUG] 블록: 0x1c79
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2021
+[DEBUG] 찾은 JMP: JMP        loc_key_98
+[DEBUG] 블록: 0x2026
+[DEBUG] 블록: 0x2035
+[DEBUG] 찾은 JMP: JMP        loc_key_101
+[DEBUG] 블록: 0x13ef
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x30], 0x7200
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x203a
+[DEBUG] 블록: 0x1a98
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2049
+[DEBUG] 찾은 JMP: JMP        loc_key_104
+[DEBUG] 블록: 0x204e
+[DEBUG] 블록: 0x15fb
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x205d
+[DEBUG] 찾은 JMP: JMP        loc_key_107
+[DEBUG] 블록: 0x2062
+[DEBUG] 블록: 0x2071
+[DEBUG] 찾은 JMP: JMP        loc_key_110
+[DEBUG] 블록: 0x1425
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x30], 0x14FA
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2076
+[DEBUG] 블록: 0x1283
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x30], 0x157CA
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2085
+[DEBUG] 찾은 JMP: JMP        loc_key_113
+[DEBUG] 블록: 0x208a
+[DEBUG] 블록: 0x1701
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2099
+[DEBUG] 찾은 JMP: JMP        loc_key_116
+[DEBUG] 블록: 0x209e
+[DEBUG] 블록: 0x1cb5
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x20ad
+[DEBUG] 찾은 JMP: JMP        loc_key_119
+[DEBUG] 블록: 0x20b2
+[DEBUG] 블록: 0x15a1
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x20c1
+[DEBUG] 찾은 JMP: JMP        loc_key_122
+[DEBUG] 블록: 0x20c6
+[DEBUG] 블록: 0x20d5
+[DEBUG] 찾은 JMP: JMP        loc_key_125
+[DEBUG] 블록: 0x1ab6
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x20da
+[DEBUG] 블록: 0x20e9
+[DEBUG] 찾은 JMP: JMP        loc_key_128
+[DEBUG] 블록: 0x1ced
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x20ee
+[DEBUG] 블록: 0x20fd
+[DEBUG] 찾은 JMP: JMP        loc_key_131
+[DEBUG] 블록: 0x1325
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2102
+[DEBUG] 블록: 0x2111
+[DEBUG] 찾은 JMP: JMP        loc_key_134
+[DEBUG] 블록: 0x13ac
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x1C], 0x0
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x30], 0x14FA
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2116
+[DEBUG] 블록: 0x1550
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x910A
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2125
+[DEBUG] 찾은 JMP: JMP        loc_key_137
+[DEBUG] 블록: 0x212a
+[DEBUG] 블록: 0x2139
+[DEBUG] 찾은 JMP: JMP        loc_key_140
+[DEBUG] 블록: 0x1ac3
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x213e
+[DEBUG] 블록: 0x1b0c
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x214d
+[DEBUG] 찾은 JMP: JMP        loc_key_143
+[DEBUG] 블록: 0x2152
+[DEBUG] 블록: 0x2161
+[DEBUG] 찾은 JMP: JMP        loc_key_146
+[DEBUG] 블록: 0x11c5
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x30], 0x13FE8
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2166
+[DEBUG] 블록: 0x17a0
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2175
+[DEBUG] 찾은 JMP: JMP        loc_key_149
+[DEBUG] 블록: 0x217a
+[DEBUG] 블록: 0x2189
+[DEBUG] 찾은 JMP: JMP        loc_key_152
+[DEBUG] 블록: 0x1956
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x218e
+[DEBUG] 블록: 0x219d
+[DEBUG] 찾은 JMP: JMP        loc_key_155
+[DEBUG] 블록: 0x1aff
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x21a2
+[DEBUG] 블록: 0x21b1
+[DEBUG] 찾은 JMP: JMP        loc_key_158
+[DEBUG] 블록: 0x1644
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x21b6
+[DEBUG] 블록: 0x21c5
+[DEBUG] 찾은 JMP: JMP        loc_key_161
+[DEBUG] 블록: 0x1a4f
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x21ca
+[DEBUG] 블록: 0x21d9
+[DEBUG] 찾은 JMP: JMP        loc_key_164
+[DEBUG] 블록: 0x1d7f
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x21de
+[DEBUG] 블록: 0x1c5b
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x21ed
+[DEBUG] 찾은 JMP: JMP        loc_key_167
+[DEBUG] 블록: 0x21f2
+[DEBUG] 블록: 0x2201
+[DEBUG] 찾은 JMP: JMP        loc_key_170
+[DEBUG] 블록: 0x14e3
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x30], 0x9467
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2206
+[DEBUG] 블록: 0x1228
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2215
+[DEBUG] 찾은 JMP: JMP        loc_key_173
+[DEBUG] 블록: 0x221a
+[DEBUG] 블록: 0x2229
+[DEBUG] 찾은 JMP: JMP        loc_key_176
+[DEBUG] 블록: 0x1df3
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x222e
+[DEBUG] 블록: 0x223d
+[DEBUG] 찾은 JMP: JMP        loc_key_179
+[DEBUG] 블록: 0x1205
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2242
+[DEBUG] 블록: 0x1298
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2251
+[DEBUG] 찾은 JMP: JMP        loc_key_182
+[DEBUG] 블록: 0x2256
+[DEBUG] 블록: 0x2265
+[DEBUG] 찾은 JMP: JMP        loc_key_185
+[DEBUG] 블록: 0x1515
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x30], 0x1535C
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x226a
+[DEBUG] 블록: 0x2279
+[DEBUG] 찾은 JMP: JMP        loc_key_188
+[DEBUG] 블록: 0x1e3c
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x227e
+[DEBUG] 블록: 0x1c12
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x228d
+[DEBUG] 찾은 JMP: JMP        loc_key_191
+[DEBUG] 블록: 0x2292
+[DEBUG] 블록: 0x22a1
+[DEBUG] 찾은 JMP: JMP        loc_key_194
+[DEBUG] 블록: 0x19f5
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x22a6
+[DEBUG] 블록: 0x22b5
+[DEBUG] 찾은 JMP: JMP        loc_key_197
+[DEBUG] 블록: 0x15bf
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x22ba
+[DEBUG] 블록: 0x22c9
+[DEBUG] 찾은 JMP: JMP        loc_key_200
+[DEBUG] 블록: 0x1565
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x22ce
+[DEBUG] 블록: 0x22dd
+[DEBUG] 찾은 JMP: JMP        loc_key_203
+[DEBUG] 블록: 0x18ef
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x22e2
+[DEBUG] 블록: 0x22f1
+[DEBUG] 찾은 JMP: JMP        loc_key_206
+[DEBUG] 블록: 0x149a
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x30], 0x147A9
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x22f6
+[DEBUG] 블록: 0x1a13
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2305
+[DEBUG] 찾은 JMP: JMP        loc_key_209
+[DEBUG] 블록: 0x230a
+[DEBUG] 블록: 0x2319
+[DEBUG] 찾은 JMP: JMP        loc_key_212
+[DEBUG] 블록: 0x1b73
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x231e
+[DEBUG] 블록: 0x1dc8
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x232d
+[DEBUG] 찾은 JMP: JMP        loc_key_215
+[DEBUG] 블록: 0x2332
+[DEBUG] 블록: 0x19e8
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2341
+[DEBUG] 찾은 JMP: JMP        loc_key_218
+[DEBUG] 블록: 0x2346
+[DEBUG] 블록: 0x192b
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2355
+[DEBUG] 찾은 JMP: JMP        loc_key_221
+[DEBUG] 블록: 0x235a
+[DEBUG] 블록: 0x2369
+[DEBUG] 찾은 JMP: JMP        loc_key_224
+[DEBUG] 블록: 0x1445
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x24], 0xFFFFFFFF
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x30], 0x14125
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x236e
+[DEBUG] 블록: 0x1899
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x237d
+[DEBUG] 찾은 JMP: JMP        loc_key_227
+[DEBUG] 블록: 0x2382
+[DEBUG] 블록: 0x2391
+[DEBUG] 찾은 JMP: JMP        loc_key_230
+[DEBUG] 블록: 0x18b7
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2396
+[DEBUG] 블록: 0x16e3
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x23a5
+[DEBUG] 찾은 JMP: JMP        loc_key_233
+[DEBUG] 블록: 0x23aa
+[DEBUG] 블록: 0x23b9
+[DEBUG] 찾은 JMP: JMP        loc_key_236
+[DEBUG] 블록: 0x166f
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x23be
+[DEBUG] 블록: 0x1cc2
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x23cd
+[DEBUG] 찾은 JMP: JMP        loc_key_239
+[DEBUG] 블록: 0x23d2
+[DEBUG] 블록: 0x1e11
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x23e1
+[DEBUG] 찾은 JMP: JMP        loc_key_242
+[DEBUG] 블록: 0x23e6
+[DEBUG] 블록: 0x23f5
+[DEBUG] 찾은 JMP: JMP        loc_key_245
+[DEBUG] 블록: 0x16c5
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x23fa
+[DEBUG] 블록: 0x1619
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2409
+[DEBUG] 찾은 JMP: JMP        loc_key_248
+[DEBUG] 블록: 0x240e
+[DEBUG] 블록: 0x1462
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x30], 0x147A9
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x241d
+[DEBUG] 찾은 JMP: JMP        loc_key_251
+[DEBUG] 블록: 0x2422
+[DEBUG] 블록: 0x1d61
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2431
+[DEBUG] 찾은 JMP: JMP        loc_key_254
+[DEBUG] 블록: 0x2436
+[DEBUG] 블록: 0x1bc9
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2445
+[DEBUG] 찾은 JMP: JMP        loc_key_257
+[DEBUG] 블록: 0x244a
+[DEBUG] 블록: 0x2459
+[DEBUG] 찾은 JMP: JMP        loc_key_260
+[DEBUG] 블록: 0x1d29
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x245e
+[DEBUG] 블록: 0x152a
+[DEBUG] 블록: 0x246d
+[DEBUG] 찾은 JMP: JMP        loc_key_264
+[DEBUG] 블록: 0x153c
+[DEBUG] 블록: 0x2472
+[DEBUG] 블록: 0x2481
+[DEBUG] 찾은 JMP: JMP        loc_key_267
+[DEBUG] 블록: 0x1b9e
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2486
+[DEBUG] 블록: 0x1d54
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2495
+[DEBUG] 찾은 JMP: JMP        loc_key_270
+[DEBUG] 블록: 0x249a
+[DEBUG] 블록: 0x24a9
+[DEBUG] 찾은 JMP: JMP        loc_key_273
+[DEBUG] 블록: 0x1a8b
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x24ae
+[DEBUG] 블록: 0x1bbc
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x24bd
+[DEBUG] 찾은 JMP: JMP        loc_key_276
+[DEBUG] 블록: 0x24c2
+[DEBUG] 블록: 0x24d1
+[DEBUG] 찾은 JMP: JMP        loc_key_279
+[DEBUG] 블록: 0x1825
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x24d6
+[DEBUG] 블록: 0x17cb
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x24e5
+[DEBUG] 찾은 JMP: JMP        loc_key_282
+[DEBUG] 블록: 0x24ea
+[DEBUG] 블록: 0x1348
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x24], 0x2
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x30], 0x756B
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x24f9
+[DEBUG] 찾은 JMP: JMP        loc_key_285
+[DEBUG] 블록: 0x24fe
+[DEBUG] 블록: 0x174a
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x250d
+[DEBUG] 찾은 JMP: JMP        loc_key_288
+[DEBUG] 블록: 0x2512
+[DEBUG] 블록: 0x2521
+[DEBUG] 찾은 JMP: JMP        loc_key_291
+[DEBUG] 블록: 0x1757
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2526
+[DEBUG] 블록: 0x2535
+[DEBUG] 찾은 JMP: JMP        loc_key_294
+[DEBUG] 블록: 0x171f
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x253a
+[DEBUG] 블록: 0x2549
+[DEBUG] 찾은 JMP: JMP        loc_key_297
+[DEBUG] 블록: 0x17be
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x254e
+[DEBUG] 블록: 0x172c
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x255d
+[DEBUG] 찾은 JMP: JMP        loc_key_300
+[DEBUG] 블록: 0x2562
+[DEBUG] 블록: 0x1ae1
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2571
+[DEBUG] 찾은 JMP: JMP        loc_key_303
+[DEBUG] 블록: 0x2576
+[DEBUG] 블록: 0x2585
+[DEBUG] 찾은 JMP: JMP        loc_key_306
+[DEBUG] 블록: 0x1e2f
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x258a
+[DEBUG] 블록: 0x2599
+[DEBUG] 찾은 JMP: JMP        loc_key_309
+[DEBUG] 블록: 0x1de6
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x259e
+[DEBUG] 블록: 0x25ad
+[DEBUG] 찾은 JMP: JMP        loc_key_312
+[DEBUG] 블록: 0x1be7
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x25b2
+[DEBUG] 블록: 0x1260
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x25c1
+[DEBUG] 찾은 JMP: JMP        loc_key_315
+[DEBUG] 블록: 0x25c6
+[DEBUG] 블록: 0x25d5
+[DEBUG] 찾은 JMP: JMP        loc_key_318
+[DEBUG] 블록: 0x1b37
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x25da
+[DEBUG] 블록: 0x1949
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x25e9
+[DEBUG] 찾은 JMP: JMP        loc_key_321
+[DEBUG] 블록: 0x25ee
+[DEBUG] 블록: 0x25fd
+[DEBUG] 찾은 JMP: JMP        loc_key_324
+[DEBUG] 블록: 0x1365
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x24], 0xFFFFFFFF
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x30], 0x756B
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2602
+[DEBUG] 블록: 0x2611
+[DEBUG] 찾은 JMP: JMP        loc_key_327
+[DEBUG] 블록: 0x1d9d
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2616
+[DEBUG] 블록: 0x2625
+[DEBUG] 찾은 JMP: JMP        loc_key_330
+[DEBUG] 블록: 0x1d36
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x262a
+[DEBUG] 블록: 0x2639
+[DEBUG] 찾은 JMP: JMP        loc_key_333
+[DEBUG] 블록: 0x12bb
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x30], 0x1ED3
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x263e
+[DEBUG] 블록: 0x1dbb
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x264d
+[DEBUG] 찾은 JMP: JMP        loc_key_336
+[DEBUG] 블록: 0x2652
+[DEBUG] 블록: 0x1c30
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2661
+[DEBUG] 찾은 JMP: JMP        loc_key_339
+[DEBUG] 블록: 0x2666
+[DEBUG] 블록: 0x17e9
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2675
+[DEBUG] 찾은 JMP: JMP        loc_key_342
+[DEBUG] 블록: 0x267a
+[DEBUG] 블록: 0x2689
+[DEBUG] 찾은 JMP: JMP        loc_key_345
+[DEBUG] 블록: 0x1626
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x268e
+[DEBUG] 블록: 0x1b91
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x269d
+[DEBUG] 찾은 JMP: JMP        loc_key_348
+[DEBUG] 블록: 0x26a2
+[DEBUG] 블록: 0x26b1
+[DEBUG] 찾은 JMP: JMP        loc_key_351
+[DEBUG] 블록: 0x15dd
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x26b6
+[DEBUG] 블록: 0x26c5
+[DEBUG] 찾은 JMP: JMP        loc_key_354
+[DEBUG] 블록: 0x186e
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x26ca
+[DEBUG] 블록: 0x14f8
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x24], 0xFFFFFFFF
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x30], 0x14125
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x26d9
+[DEBUG] 찾은 JMP: JMP        loc_key_357
+[DEBUG] 블록: 0x26de
+[DEBUG] 블록: 0x11a2
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x26ed
+[DEBUG] 찾은 JMP: JMP        loc_key_360
+[DEBUG] 블록: 0x26f2
+[DEBUG] 블록: 0x2701
+[DEBUG] 찾은 JMP: JMP        loc_key_363
+[DEBUG] 블록: 0x18c4
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2706
+[DEBUG] 블록: 0x124b
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x30], 0x157CA
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2715
+[DEBUG] 찾은 JMP: JMP        loc_key_366
+[DEBUG] 블록: 0x271a
+[DEBUG] 블록: 0x1308
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x24], 0x1
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x30], 0x9580
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2729
+[DEBUG] 찾은 JMP: JMP        loc_key_369
+[DEBUG] 블록: 0x272e
+[DEBUG] 블록: 0x1974
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x273d
+[DEBUG] 찾은 JMP: JMP        loc_key_372
+[DEBUG] 블록: 0x2742
+[DEBUG] 블록: 0x2751
+[DEBUG] 찾은 JMP: JMP        loc_key_375
+[DEBUG] 블록: 0x169a
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2756
+[DEBUG] 블록: 0x2765
+[DEBUG] 찾은 JMP: JMP        loc_key_378
+[DEBUG] 블록: 0x1c97
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x276a
+[DEBUG] 블록: 0x2779
+[DEBUG] 찾은 JMP: JMP        loc_key_381
+[DEBUG] 블록: 0x168d
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x277e
+[DEBUG] 블록: 0x16b8
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x278d
+[DEBUG] 찾은 JMP: JMP        loc_key_384
+[DEBUG] 블록: 0x2792
+[DEBUG] 블록: 0x27a1
+[DEBUG] 찾은 JMP: JMP        loc_key_387
+[DEBUG] 블록: 0x1583
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x27a6
+[DEBUG] 블록: 0x1843
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x27b5
+[DEBUG] 찾은 JMP: JMP        loc_key_390
+[DEBUG] 블록: 0x27ba
+[DEBUG] 블록: 0x27c9
+[DEBUG] 찾은 JMP: JMP        loc_key_393
+[DEBUG] 블록: 0x190d
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x27ce
+[DEBUG] 블록: 0x27dd
+[DEBUG] 찾은 JMP: JMP        loc_key_396
+[DEBUG] 블록: 0x14c6
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x24], 0xFFFFFFFF
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x30], 0x14125
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x27e2
+[DEBUG] 블록: 0x1850
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x27f1
+[DEBUG] 찾은 JMP: JMP        loc_key_399
+[DEBUG] 블록: 0x27f6
+[DEBUG] 블록: 0x1543
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2805
+[DEBUG] 찾은 JMP: JMP        loc_key_402
+[DEBUG] 블록: 0x280a
+[DEBUG] 블록: 0x2819
+[DEBUG] 찾은 JMP: JMP        loc_key_405
+[DEBUG] 블록: 0x1c05
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x281e
+[DEBUG] 블록: 0x12d0
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x282d
+[DEBUG] 찾은 JMP: JMP        loc_key_408
+[DEBUG] 블록: 0x2832
+[DEBUG] 블록: 0x2841
+[DEBUG] 찾은 JMP: JMP        loc_key_411
+[DEBUG] 블록: 0x1c3d
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x2846
+[DEBUG] 블록: 0x2855
+[DEBUG] 찾은 JMP: JMP        loc_key_414
+[DEBUG] 블록: 0x1a6d
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x285a
+[DEBUG] 블록: 0x2869
+[DEBUG] 찾은 JMP: JMP        loc_key_417
+[DEBUG] 블록: 0x18e2
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x17513
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x286e
+[DEBUG] 블록: 0x287d
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] 블록: 0x1477
+[DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] 찾은 JMP: JMP        loc_key_32
+[DEBUG] get_cff_info() 종료, relevant_blocks 개수: 259
+[DEBUG] dispatcher: 4477, pre_dispatcher: 4477
+[DEBUG] get_cff_info() 완료, relevant_blocks 개수: 259
+[DEBUG] dispatcher 명령어: MOV        DWORD PTR [RSP + 0x24], 0x0
+[DEBUG] dispatcher 명령어: MOV        DWORD PTR [RSP + 0x20], 0x0
+[DEBUG] dispatcher 명령어: MOV        DWORD PTR [RSP + 0x30], 0x1535C
+[DEBUG] dispatcher 명령어: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] dispatcher 명령어: JMP        loc_key_32
+[DEBUG] JMP 명령어 발견: JMP        loc_key_32
+[WARNING] JMP 대상 변환 실패: JMP        loc_key_32
+[ERROR] dispatcher에서 state_var를 찾지 못했습니다.
+[DEBUG] dispatcher 전체 명령어 확인: MOV        DWORD PTR [RSP + 0x24], 0x0
+[DEBUG] dispatcher 전체 명령어 확인: MOV        DWORD PTR [RSP + 0x20], 0x0
+[DEBUG] dispatcher 전체 명령어 확인: MOV        DWORD PTR [RSP + 0x30], 0x1535C
+[DEBUG] dispatcher 전체 명령어 확인: MOV        DWORD PTR [RSP + 0x34], 0x6724
+[DEBUG] dispatcher 전체 명령어 확인: JMP        loc_key_32
+[DEBUG] Flattening Score: 0.0
+[DEBUG] Function 0x1030 Flattening Score: 0.0
+[WARNING] Flattening Score 0.0가 낮음 → 강제 패치 실행
+-------------------------
+|    func : 0x1030    |
+-------------------------
+[DEBUG] deflat() 실행 중: 0x1030
+[DEBUG] get_cff_info() 실행 시작
+[DEBUG] 블록: 0x1030
+[DEBUG] 찾은 JMP: JMP        QWORD PTR [RIP + 0x3FE2]
+[DEBUG] get_cff_info() 종료, relevant_blocks 개수: 1
+[DEBUG] dispatcher: 4144, pre_dispatcher: None
+[DEBUG] get_cff_info() 완료, relevant_blocks 개수: 1
+[DEBUG] dispatcher 명령어: JMP        QWORD PTR [RIP + 0x3FE2]
+[DEBUG] JMP 명령어 발견: JMP        QWORD PTR [RIP + 0x3FE2]
+[DEBUG] RIP 기반 JMP 변환 성공: @64[RIP + 0x3FE2] → 0x8fba
+[DEBUG] JMP 변환 완료: @64[RIP + 0x3FE2] → 0x8fba
+[INFO] state_var: 36794
+[DEBUG] Analyzing relevant block @ 0x1030
+[DEBUG] 전체 블록 스캔: 0x1030
+[WARNING] state_var 36794 사용 주소를 찾지 못했습니다.
+[WARNING] 0x1030에서 state_var(36794) 사용 블록 없음. 전체 블록 탐색 중...
+[DEBUG] 전체 블록 스캔: 0x1030
+[WARNING] state_var loc_key_28 사용 주소를 찾지 못했습니다.
+[ERROR] state_var 36794를 사용하는 블록을 찾지 못했습니다.
+[ERROR] state_var를 사용하는 블록을 찾지 못했습니다.
+[DEBUG] Flattening Score: 0.0
+[DEBUG] Function 0x1040 Flattening Score: 0.0
+[WARNING] Flattening Score 0.0가 낮음 → 강제 패치 실행
+-------------------------
+|    func : 0x1040    |
+-------------------------
+[DEBUG] deflat() 실행 중: 0x1040
+[DEBUG] get_cff_info() 실행 시작
+[DEBUG] 블록: 0x1040
+[DEBUG] 찾은 JMP: JMP        QWORD PTR [RIP + 0x3FDA]
+[DEBUG] get_cff_info() 종료, relevant_blocks 개수: 1
+[DEBUG] dispatcher: 4160, pre_dispatcher: None
+[DEBUG] get_cff_info() 완료, relevant_blocks 개수: 1
+[DEBUG] dispatcher 명령어: JMP        QWORD PTR [RIP + 0x3FDA]
+[DEBUG] JMP 명령어 발견: JMP        QWORD PTR [RIP + 0x3FDA]
+[DEBUG] RIP 기반 JMP 변환 성공: @64[RIP + 0x3FDA] → 0x8fb2
+[DEBUG] JMP 변환 완료: @64[RIP + 0x3FDA] → 0x8fb2
+[INFO] state_var: 36786
+[DEBUG] Analyzing relevant block @ 0x1040
+[DEBUG] 전체 블록 스캔: 0x1040
+[WARNING] state_var 36786 사용 주소를 찾지 못했습니다.
+[WARNING] 0x1040에서 state_var(36786) 사용 블록 없음. 전체 블록 탐색 중...
+[DEBUG] 전체 블록 스캔: 0x1040
+[WARNING] state_var loc_key_30 사용 주소를 찾지 못했습니다.
+[ERROR] state_var 36786를 사용하는 블록을 찾지 못했습니다.
+[ERROR] state_var를 사용하는 블록을 찾지 못했습니다.

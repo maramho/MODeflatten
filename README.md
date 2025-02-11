@@ -42,4 +42,10 @@ optional arguments:
 
 # References
 [Dissecting LLVM Obfuscator - RPISEC](https://rpis.ec/blog/dissection-llvm-obfuscator-p1/)  
+
+
 [Automated Detection of Control-flow Flattening - Tim Blazytko](https://synthesis.to/2021/03/03/flattening_detection.html)  
+
+
+
+python3 modeflattener.py -a /home/dongho.lee/MODeflattener/MODeflattener/ll_file/output_binary /home/dongho.lee/MODeflattener/MODeflattener/ll_file/deflattened_output_binary 0x1150
