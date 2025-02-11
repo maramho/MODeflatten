@@ -283,11 +283,9 @@ if __name__ == '__main__':
                     # LocKey를 정수형 오프셋으로 변환
                     if isinstance(offset, LocKey):
                         offset = loc_db.get_location_offset(offset)
-
                     fpatch.seek(offset - bin_base_addr)
-
-                    #fpatch.seek(offset - bin_base_addr)
-                    fpatch.write(data)
+                    
+                    #fpatch.write(data)
 
                 fcn_end_time = time.time() - fcn_start_time
                 _log.info("PATCHING SUCCESSFUL for function @ %#x (%.2f secs)\n" % (ad, fcn_end_time))

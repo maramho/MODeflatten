@@ -782,16 +782,16 @@
 [DEBUG] get_cff_info() 완료, relevant_blocks 개수: 1
 [DEBUG] dispatcher 명령어: JMP        QWORD PTR [RIP + 0x3FE2]
 [DEBUG] JMP 명령어 발견: JMP        QWORD PTR [RIP + 0x3FE2]
-[DEBUG] RIP 기반 JMP 변환 성공: @64[RIP + 0x3FE2] → 0x8fba
-[DEBUG] JMP 변환 완료: @64[RIP + 0x3FE2] → 0x8fba
-[INFO] state_var: 36794
+[DEBUG] RIP 기반 JMP 변환 성공: @64[RIP + 0x3FE2] → 0x5012
+[DEBUG] JMP 변환 완료: @64[RIP + 0x3FE2] → 0x5012
+[INFO] state_var: 20498
 [DEBUG] Analyzing relevant block @ 0x1030
 [DEBUG] 전체 블록 스캔: 0x1030
-[WARNING] state_var 36794 사용 주소를 찾지 못했습니다.
-[WARNING] 0x1030에서 state_var(36794) 사용 블록 없음. 전체 블록 탐색 중...
+[WARNING] state_var 20498 사용 주소를 찾지 못했습니다.
+[WARNING] 0x1030에서 state_var(20498) 사용 블록 없음. 전체 블록 탐색 중...
 [DEBUG] 전체 블록 스캔: 0x1030
 [WARNING] state_var loc_key_28 사용 주소를 찾지 못했습니다.
-[ERROR] state_var 36794를 사용하는 블록을 찾지 못했습니다.
+[ERROR] state_var 20498를 사용하는 블록을 찾지 못했습니다.
 [ERROR] state_var를 사용하는 블록을 찾지 못했습니다.
 [DEBUG] Flattening Score: 0.0
 [DEBUG] Function 0x1040 Flattening Score: 0.0
@@ -808,14 +808,14 @@
 [DEBUG] get_cff_info() 완료, relevant_blocks 개수: 1
 [DEBUG] dispatcher 명령어: JMP        QWORD PTR [RIP + 0x3FDA]
 [DEBUG] JMP 명령어 발견: JMP        QWORD PTR [RIP + 0x3FDA]
-[DEBUG] RIP 기반 JMP 변환 성공: @64[RIP + 0x3FDA] → 0x8fb2
-[DEBUG] JMP 변환 완료: @64[RIP + 0x3FDA] → 0x8fb2
-[INFO] state_var: 36786
+[DEBUG] RIP 기반 JMP 변환 성공: @64[RIP + 0x3FDA] → 0x501a
+[DEBUG] JMP 변환 완료: @64[RIP + 0x3FDA] → 0x501a
+[INFO] state_var: 20506
 [DEBUG] Analyzing relevant block @ 0x1040
 [DEBUG] 전체 블록 스캔: 0x1040
-[WARNING] state_var 36786 사용 주소를 찾지 못했습니다.
-[WARNING] 0x1040에서 state_var(36786) 사용 블록 없음. 전체 블록 탐색 중...
+[WARNING] state_var 20506 사용 주소를 찾지 못했습니다.
+[WARNING] 0x1040에서 state_var(20506) 사용 블록 없음. 전체 블록 탐색 중...
 [DEBUG] 전체 블록 스캔: 0x1040
 [WARNING] state_var loc_key_30 사용 주소를 찾지 못했습니다.
-[ERROR] state_var 36786를 사용하는 블록을 찾지 못했습니다.
+[ERROR] state_var 20506를 사용하는 블록을 찾지 못했습니다.
 [ERROR] state_var를 사용하는 블록을 찾지 못했습니다.
