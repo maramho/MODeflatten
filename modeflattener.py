@@ -171,39 +171,53 @@ def deflat(ad, func_info, loc_db):
 
         # find the possible values of the state variable
         var_asg, tmpval_list = find_var_asg(ircfg, {state_var})
+        _log.debug('%#x %s' % (addr, var_asg))
+
         # adding all the possible values to a global list
         val_list += tmpval_list
 
+        last_blk = list(asmcfg.blocks)[-1]
         # checking the type of relevant blocks on the basis of no. of possible values
         if len(var_asg) == 1:
             var_asg['next'] = hex(var_asg['next'])
+            #map value of state variable in rel block
+            fixed_cfg[hex(addr)] = var_asg
         elif len(var_asg) > 1:
             #extracting the condition from the last 3rd line
-            cond_mnem = list(asmcfg.blocks)[-1].lines[-3].name
+            cond_mnem = last_blk.lines[-3].name
             _log.debug('cond used: %s' % cond_mnem)
             var_asg['cond'] = cond_mnem
             var_asg['true_next'] = hex(var_asg['true_next'])
             var_asg['false_next'] = hex(var_asg['false_next'])
+            # map the conditions and possible values dictionary to the cfg info
+            fixed_cfg[hex(addr)] = var_asg
+        elif len(last_blk.lines)==1 and len(var_asg)==0:
+                #tail has a single instruction ie. jmp and no assignments
+                tail = addr
+                _log.debug("found backbone tail @ %#x" % addr)
+        else:
+            _log.error("no state variable assignments found for relevant block @ %#x" % addr)
+            # return empty patches as deobfuscation failed!!
+            return {}
 
-        # map the conditions and possible values dictionary to the cfg info
-        fixed_cfg[hex(addr)] = var_asg
-        _log.debug('%#x %s' % (addr, var_asg))
 
     _log.debug('val_list: ' + ', '.join([hex(val) for val in val_list]))
 
     # get the value for reaching a particular relevant block
     for lbl, irblock in viewitems(main_ircfg.blocks):
         for assignblk in irblock:
-            dst, src = assignblk.items()[0]
-            if isinstance(src, ExprOp):
-                if src.op == 'FLAG_EQ_CMP':
-                    arg = src.args[1]
-                    if isinstance(arg, ExprInt):
-                        if int(arg) in val_list:
-                            cmp_val = int(arg)
-                            var, locs = irblock[-1].items()[0]
-                            true_dst = main_ircfg.loc_db.get_location_offset(locs.src1.loc_key)
-                            backbone[hex(cmp_val)] = hex(true_dst)
+            asg_items = assignblk.items()
+            if asg_items:    # do not enter if nop
+                dst, src = asg_items[0]
+                if isinstance(src, ExprOp):
+                    if src.op == 'FLAG_EQ_CMP':
+                        arg = src.args[1]
+                        if isinstance(arg, ExprInt):
+                            if int(arg) in val_list:
+                                cmp_val = int(arg)
+                                var, locs = irblock[-1].items()[0]
+                                true_dst = main_ircfg.loc_db.get_location_offset(locs.src1.loc_key)
+                                backbone[hex(cmp_val)] = hex(true_dst)
 
     _log.debug('***** BACKBONE *****\n' + pprint.pformat(backbone))
 
@@ -219,10 +233,9 @@ def deflat(ad, func_info, loc_db):
             # the tail doesn't has any condition
             tail = int(offset, 16)
 
-    # remove the tail from cfg and unmark it as a relevant block
-    fixed_cfg.pop(hex(tail))
+    # unmark tail as a relevant block
     rel_blk_info.pop(tail)
-    _log.debug('removed tail @%#x from relevant_blocks' % tail)
+    _log.debug('removed tail @ %#x from relevant_blocks' % tail)
 
     _log.debug('******FIXED CFG*******\n' + pprint.pformat(fixed_cfg))
 
@@ -337,9 +350,10 @@ if __name__ == '__main__':
             fcn_start_time = time.time()
             patches = deflat(ad, all_funcs_blocks[ad], loc_db)
 
-            for offset, data in patches.items():
-                fpatch.seek(offset - bin_base_addr)
-                fpatch.write(data)
+            if patches:
+                for offset, data in patches.items():
+                    fpatch.seek(offset - bin_base_addr)
+                    fpatch.write(data)
 
                 fcn_end_time = time.time() - fcn_start_time
                 _log.info("PATCHING SUCCESSFUL for function @ %#x (%.2f secs)\n" % (ad, fcn_end_time))
@@ -347,7 +361,7 @@ if __name__ == '__main__':
                 _log.error("PATCHING UNSUCCESSFUL for function @ %#x\n" % ad)
 
         else:
-            _log.error("unable to deobfuscate func %#x (cff score = %f)" % (ad, score))
+            _log.error("unable to deobfuscate func %#x (cff score = %f)\n" % (ad, score))
 
     fpatch.close()
     deobf_end_time = time.time() - deobf_start_time
