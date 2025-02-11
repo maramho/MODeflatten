@@ -330,10 +330,8 @@ def resolve_jump_target(asmcfg, loc_db, jmp_target):
             print(f"[ERROR] RIP 기반 JMP 변환 실패: {jmp_target}, 에러: {e}")
 
         return None
-
-<<<<<<< HEAD
     return None
-=======
+
 def find_state_var_usedefs(ircfg, state_var):
     state_var_uses = []
     state_var_val = str(state_var)
@@ -443,7 +441,8 @@ def resolve_jump_target(asmcfg, loc_db, jmp_target):
             except (ValueError, IndexError, AttributeError) as e:
                 print(f"[ERROR] RIP 기반 JMP 변환 실패: {e}")
                 return None
+            
 
 
 
->>>>>>> Initial commit from server
+#test1#
