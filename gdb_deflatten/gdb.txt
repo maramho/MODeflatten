@@ -1,0 +1,378 @@
+Reading symbols from /home/dongho.lee/MODeflattener/MODeflattener/ll_file/cfg.O0.flatten_binary...
+Breakpoint 1 at 0x1150: file cfg.cpp, line 3.
+
+Breakpoint 1, main () at cfg.cpp:3
+3	int main() {
+$1 = (int *) 0x7fffffffdacc
+$2 = 21845
+Hardware watchpoint 2: state
+Hardware read watchpoint 3: state
+Hardware access (read/write) watchpoint 4: state
+
+Hardware watchpoint 2: state
+
+Old value = 21845
+New value = 0
+main () at cfg.cpp:9
+9	    int result = 0;
+📍 [DEBUG] state 변경 감지: 0 (주소: 0x7fffffffda94)
+#0  main () at cfg.cpp:9
+rax            0x1                 1
+rbx            0x555555556890      93824992241808
+rcx            0x0                 0
+rdx            0x0                 0
+rsi            0x0                 0
+rdi            0x7fffffffd530      140737488344368
+rbp            0x0                 0x0
+rsp            0x7fffffffda70      0x7fffffffda70
+r8             0xffffffff          4294967295
+r9             0x0                 0
+r10            0x7ffff7f45ac0      140737353374400
+r11            0x0                 0
+r12            0x555555555060      93824992235616
+r13            0x7fffffffdb90      140737488346000
+r14            0x0                 0
+r15            0x0                 0
+rip            0x555555555185      0x555555555185 <main()+53>
+eflags         0x202               [ IF ]
+cs             0x33                51
+ss             0x2b                43
+ds             0x0                 0
+es             0x0                 0
+fs             0x0                 0
+gs             0x0                 0
+k0             0x0                 0
+k1             0x0                 0
+k2             0x0                 0
+k3             0x0                 0
+k4             0x0                 0
+k5             0x0                 0
+k6             0x0                 0
+k7             0x0                 0
+
+Hardware read watchpoint 3: state
+
+Value = 0
+0x00005555555551b1 in main () at cfg.cpp:11
+11	    while (state != -1) {
+📍 [DEBUG] state 변경 감지: 0 (주소: 0x7fffffffda94)
+#0  0x00005555555551b1 in main () at cfg.cpp:11
+rax            0xd39b              54171
+rbx            0x555555556890      93824992241808
+rcx            0x127e              4734
+rdx            0x0                 0
+rsi            0x0                 0
+rdi            0x7fffffffd530      140737488344368
+rbp            0x0                 0x0
+rsp            0x7fffffffda70      0x7fffffffda70
+r8             0xffffffff          4294967295
+r9             0x0                 0
+r10            0x7ffff7f45ac0      140737353374400
+r11            0x0                 0
+r12            0x555555555060      93824992235616
+r13            0x7fffffffdb90      140737488346000
+r14            0x0                 0
+r15            0x0                 0
+rip            0x5555555551b1      0x5555555551b1 <main()+97>
+eflags         0x213               [ CF AF IF ]
+cs             0x33                51
+ss             0x2b                43
+ds             0x0                 0
+es             0x0                 0
+fs             0x0                 0
+gs             0x0                 0
+k0             0x0                 0
+k1             0x0                 0
+k2             0x0                 0
+k3             0x0                 0
+k4             0x0                 0
+k5             0x0                 0
+k6             0x0                 0
+k7             0x0                 0
+
+Hardware read watchpoint 3: state
+
+Value = 0
+0x00005555555551c9 in main () at cfg.cpp:12
+12	        switch (state) {
+📍 [DEBUG] state 변경 감지: 0 (주소: 0x7fffffffda94)
+#0  0x00005555555551c9 in main () at cfg.cpp:12
+rax            0x0                 0
+rbx            0x555555556890      93824992241808
+rcx            0x6977              26999
+rdx            0x0                 0
+rsi            0x0                 0
+rdi            0x7fffffffd530      140737488344368
+rbp            0x0                 0x0
+rsp            0x7fffffffda70      0x7fffffffda70
+r8             0xffffffff          4294967295
+r9             0x0                 0
+r10            0x7ffff7f45ac0      140737353374400
+r11            0x0                 0
+r12            0x555555555060      93824992235616
+r13            0x7fffffffdb90      140737488346000
+r14            0x0                 0
+r15            0x0                 0
+rip            0x5555555551c9      0x5555555551c9 <main()+121>
+eflags         0x246               [ PF ZF IF ]
+cs             0x33                51
+ss             0x2b                43
+ds             0x0                 0
+es             0x0                 0
+fs             0x0                 0
+gs             0x0                 0
+k0             0x0                 0
+k1             0x0                 0
+k2             0x0                 0
+k3             0x0                 0
+k4             0x0                 0
+k5             0x0                 0
+k6             0x0                 0
+k7             0x0                 0
+
+Hardware watchpoint 2: state
+
+Old value = 0
+New value = 2
+0x0000555555555350 in main () at cfg.cpp:17
+17	                    state = 2; // 상태 전환
+📍 [DEBUG] state 변경 감지: 2 (주소: 0x7fffffffda94)
+#0  0x0000555555555350 in main () at cfg.cpp:17
+rax            0x0                 0
+rbx            0x555555556890      93824992241808
+rcx            0xe372              58226
+rdx            0x0                 0
+rsi            0x0                 0
+rdi            0x7fffffffd530      140737488344368
+rbp            0x0                 0x0
+rsp            0x7fffffffda70      0x7fffffffda70
+r8             0xffffffff          4294967295
+r9             0x0                 0
+r10            0x7ffff7f45ac0      140737353374400
+r11            0x0                 0
+r12            0x555555555060      93824992235616
+r13            0x7fffffffdb90      140737488346000
+r14            0x0                 0
+r15            0x0                 0
+rip            0x555555555350      0x555555555350 <main()+512>
+eflags         0x246               [ PF ZF IF ]
+cs             0x33                51
+ss             0x2b                43
+ds             0x0                 0
+es             0x0                 0
+fs             0x0                 0
+gs             0x0                 0
+k0             0x0                 0
+k1             0x0                 0
+k2             0x0                 0
+k3             0x0                 0
+k4             0x0                 0
+k5             0x0                 0
+k6             0x0                 0
+k7             0x0                 0
+
+Hardware read watchpoint 3: state
+
+Value = 2
+0x00005555555551b1 in main () at cfg.cpp:11
+11	    while (state != -1) {
+📍 [DEBUG] state 변경 감지: 2 (주소: 0x7fffffffda94)
+#0  0x00005555555551b1 in main () at cfg.cpp:11
+rax            0xd39b              54171
+rbx            0x555555556890      93824992241808
+rcx            0x127e              4734
+rdx            0x0                 0
+rsi            0x0                 0
+rdi            0x7fffffffd530      140737488344368
+rbp            0x0                 0x0
+rsp            0x7fffffffda70      0x7fffffffda70
+r8             0xffffffff          4294967295
+r9             0x0                 0
+r10            0x7ffff7f45ac0      140737353374400
+r11            0x0                 0
+r12            0x555555555060      93824992235616
+r13            0x7fffffffdb90      140737488346000
+r14            0x0                 0
+r15            0x0                 0
+rip            0x5555555551b1      0x5555555551b1 <main()+97>
+eflags         0x217               [ CF PF AF IF ]
+cs             0x33                51
+ss             0x2b                43
+ds             0x0                 0
+es             0x0                 0
+fs             0x0                 0
+gs             0x0                 0
+k0             0x0                 0
+k1             0x0                 0
+k2             0x0                 0
+k3             0x0                 0
+k4             0x0                 0
+k5             0x0                 0
+k6             0x0                 0
+k7             0x0                 0
+
+Hardware read watchpoint 3: state
+
+Value = 2
+0x00005555555551c9 in main () at cfg.cpp:12
+12	        switch (state) {
+📍 [DEBUG] state 변경 감지: 2 (주소: 0x7fffffffda94)
+#0  0x00005555555551c9 in main () at cfg.cpp:12
+rax            0x2                 2
+rbx            0x555555556890      93824992241808
+rcx            0x6977              26999
+rdx            0x0                 0
+rsi            0x0                 0
+rdi            0x7fffffffd530      140737488344368
+rbp            0x0                 0x0
+rsp            0x7fffffffda70      0x7fffffffda70
+r8             0xffffffff          4294967295
+r9             0x0                 0
+r10            0x7ffff7f45ac0      140737353374400
+r11            0x0                 0
+r12            0x555555555060      93824992235616
+r13            0x7fffffffdb90      140737488346000
+r14            0x0                 0
+r15            0x0                 0
+rip            0x5555555551c9      0x5555555551c9 <main()+121>
+eflags         0x246               [ PF ZF IF ]
+cs             0x33                51
+ss             0x2b                43
+ds             0x0                 0
+es             0x0                 0
+fs             0x0                 0
+gs             0x0                 0
+k0             0x0                 0
+k1             0x0                 0
+k2             0x0                 0
+k3             0x0                 0
+k4             0x0                 0
+k5             0x0                 0
+k6             0x0                 0
+k7             0x0                 0
+
+Hardware watchpoint 2: state
+
+Old value = 2
+New value = -1
+0x00005555555554ce in main () at cfg.cpp:35
+35	                state = -1; // 종료 상태
+📍 [DEBUG] state 변경 감지: -1 (주소: 0x7fffffffda94)
+#0  0x00005555555554ce in main () at cfg.cpp:35
+rax            0x0                 0
+rbx            0x555555556890      93824992241808
+rcx            0x16bb2             93106
+rdx            0x0                 0
+rsi            0x0                 0
+rdi            0x7fffffffd530      140737488344368
+rbp            0x0                 0x0
+rsp            0x7fffffffda70      0x7fffffffda70
+r8             0xffffffff          4294967295
+r9             0x0                 0
+r10            0x7ffff7f45ac0      140737353374400
+r11            0x0                 0
+r12            0x555555555060      93824992235616
+r13            0x7fffffffdb90      140737488346000
+r14            0x0                 0
+r15            0x0                 0
+rip            0x5555555554ce      0x5555555554ce <main()+894>
+eflags         0x246               [ PF ZF IF ]
+cs             0x33                51
+ss             0x2b                43
+ds             0x0                 0
+es             0x0                 0
+fs             0x0                 0
+gs             0x0                 0
+k0             0x0                 0
+k1             0x0                 0
+k2             0x0                 0
+k3             0x0                 0
+k4             0x0                 0
+k5             0x0                 0
+k6             0x0                 0
+k7             0x0                 0
+
+Hardware read watchpoint 3: state
+
+Value = -1
+0x00005555555551b1 in main () at cfg.cpp:11
+11	    while (state != -1) {
+📍 [DEBUG] state 변경 감지: -1 (주소: 0x7fffffffda94)
+#0  0x00005555555551b1 in main () at cfg.cpp:11
+rax            0xd39b              54171
+rbx            0x555555556890      93824992241808
+rcx            0x127e              4734
+rdx            0x0                 0
+rsi            0x0                 0
+rdi            0x7fffffffd530      140737488344368
+rbp            0x0                 0x0
+rsp            0x7fffffffda70      0x7fffffffda70
+r8             0xffffffff          4294967295
+r9             0x0                 0
+r10            0x7ffff7f45ac0      140737353374400
+r11            0x0                 0
+r12            0x555555555060      93824992235616
+r13            0x7fffffffdb90      140737488346000
+r14            0x0                 0
+r15            0x0                 0
+rip            0x5555555551b1      0x5555555551b1 <main()+97>
+eflags         0x246               [ PF ZF IF ]
+cs             0x33                51
+ss             0x2b                43
+ds             0x0                 0
+es             0x0                 0
+fs             0x0                 0
+gs             0x0                 0
+k0             0x0                 0
+k1             0x0                 0
+k2             0x0                 0
+k3             0x0                 0
+k4             0x0                 0
+k5             0x0                 0
+k6             0x0                 0
+k7             0x0                 0
+
+Watchpoint 2 deleted because the program has left the block in
+which its expression is valid.
+
+Watchpoint 3 deleted because the program has left the block in
+which its expression is valid.
+
+Watchpoint 4 deleted because the program has left the block in
+which its expression is valid.
+__libc_start_main (main=0x555555555150 <main()>, argc=1, argv=0x7fffffffdb98, init=<optimized out>, fini=<optimized out>, rtld_fini=<optimized out>, stack_end=0x7fffffffdb88) at ../csu/libc-start.c:342
+342	../csu/libc-start.c: No such file or directory.
+Current language:  auto
+The current source language is "auto; currently c".
+6000
+r14            0x0                 0
+r15            0x0                 0
+rip            0x5555555551b1      0x5555555551b1 <main()+97>
+eflags         0x246               [ PF ZF IF ]
+cs             0x33                51
+ss             0x2b                43
+ds             0x0                 0
+es             0x0                 0
+fs             0x0                 0
+gs             0x0                 0
+k0             0x0                 0
+k1             0x0                 0
+k2             0x0                 0
+k3             0x0                 0
+k4             0x0                 0
+k5             0x0                 0
+k6             0x0                 0
+k7             0x0                 0
+
+Watchpoint 2 deleted because the program has left the block in
+which its expression is valid.
+
+Watchpoint 3 deleted because the program has left the block in
+which its expression is valid.
+
+Watchpoint 4 deleted because the program has left the block in
+which its expression is valid.
+__libc_start_main (main=0x555555555150 <main()>, argc=1, argv=0x7fffffffdb98, init=<optimized out>, fini=<optimized out>, rtld_fini=<optimized out>, stack_end=0x7fffffffdb88) at ../csu/libc-start.c:342
+342	../csu/libc-start.c: No such file or directory.
+Current language:  auto
+The current source language is "auto; currently c".

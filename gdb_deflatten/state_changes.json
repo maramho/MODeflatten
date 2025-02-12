@@ -1,8 +1,13 @@
 {
-    "state_offset": 0,
+    "state_address": "0x7fffffffda94",
     "state_changes": [
         0,
+        0,
+        0,
         2,
+        2,
+        2,
+        -1,
         -1
     ]
 }

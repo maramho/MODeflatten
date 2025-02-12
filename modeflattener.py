@@ -96,6 +96,15 @@ def deflat(ad, func_info, loc_db):
     mdis = machine.dis_engine(cont.bin_stream, loc_db=loc_db)
 
     print(f"[DEBUG] deflat() 실행 중: {hex(ad)}")
+    
+    with open('gdb_deflatten/state_changes.json', 'r') as file:
+        state_info = json.load(file)
+
+    state_address = int(state_info["state_address"], 16)
+    state_changes = state_info["state_changes"]  # 🔑 추가된 부분
+
+    print(f"[INFO] 추적된 state 주소: {hex(state_address)}, 변경 내역: {state_changes}")
+   
     relevant_blocks, dispatcher, pre_dispatcher = get_cff_info(main_asmcfg, loc_db)
     print(f"[DEBUG] get_cff_info() 완료, relevant_blocks 개수: {len(relevant_blocks)}")
 
@@ -124,19 +133,7 @@ def deflat(ad, func_info, loc_db):
             print(f"[WARNING] pre_dispatcher 블록 ({hex(pre_dispatcher)})을 찾지 못했습니다.")
 
     # 🔥 dispatcher 블록에서 state_var 찾기
-    
-    
-    
-    
-    with open('gdb_deflatten/state_changes.json', 'r') as file:
-        state_data = json.load(file)
-
-    state_offset = state_data['state_offset']
-    state_changes = state_data['state_changes']
-
-    print(f"[INFO] 추적된 state_offset: {state_offset}, 변경 내역: {state_changes}")
-    
-    
+  
     
     # 🔥 state_var 찾기 (JMP와 연결된 변수 추적
     for instr in dispatcher_blk.lines:
@@ -367,27 +364,31 @@ if __name__ == '__main__':
 
                 if "JMP" in instr.name:
                     jmp_target = instr.get_args_expr()[0]
-                    resolved_target = resolve_jump_target(asmcfg, loc_db, jmp_target)  # 🔥 변환 실행
-
+                    resolved_target = resolve_jump_target(asmcfg, loc_db, jmp_target)
                     if resolved_target:
                         print(f"[DEBUG] JMP 변환: {instr} → {hex(resolved_target)}")
-                        relevant_blocks.add(resolved_target)  # 해석된 주소 추가
+                        relevant_blocks.add(resolved_target)
                     else:
                         print(f"[WARNING] JMP 변환 실패: {instr}")
 
                     jmp_blocks.append(block_addr)
 
+        # Dispatcher 블록 추출
+        dispatcher = jmp_blocks[0] if jmp_blocks else None
+        dispatcher_blk = asmcfg.loc_db.get_block(dispatcher) if dispatcher else None
+
+        # Dispatcher에서 state 변수 찾기
+        if dispatcher_blk:
+            for instr in dispatcher_blk.lines:
+                if instr.name == "MOV" and state_address in [arg.arg for arg in instr.get_args_expr() if isinstance(arg, ExprInt)]:
+                    print(f"[DEBUG] dispatcher에서 state 변수 찾음: {hex(state_address)}")
+
+        # 관련 블록이 없을 경우 전체 스캔
         if not relevant_blocks:
             print("[WARNING] relevant_blocks를 찾지 못했으므로, 전체 블록을 스캔합니다.")
             relevant_blocks = {block.lines[0].offset for block in asmcfg.blocks if block.lines}
 
         relevant_blocks = sorted(relevant_blocks)
-
-        if jmp_blocks:
-            dispatcher = jmp_blocks[0]  # ✅ 가장 먼저 등장하는 JMP 블록을 dispatcher로 설정
-        else:
-            dispatcher = relevant_blocks[0] if relevant_blocks else None
-
         pre_dispatcher = relevant_blocks[1] if len(relevant_blocks) >= 2 else None
 
         print(f"[DEBUG] get_cff_info() 종료, relevant_blocks 개수: {len(relevant_blocks)}")

@@ -1,48 +1,38 @@
+set confirm off
+set pagination off
+set logging on
+
 file /home/dongho.lee/MODeflattener/MODeflattener/ll_file/cfg.O0.flatten_binary
 break main
 run < input.txt
 
-# 스택 포인터 저장
-set $base = $rsp
-printf "✅ [DEBUG] Stack base address: %p\n", $base
+# ASLR 비활성화 및 최적화 해제
+set disable-randomization on
+set environment LD_BIND_NOW 1
 
-# 🔍 주요 레지스터 추적 (RSP, RBP, RIP)
-define debug_registers
-    printf "🔍 RSP: %p | RBP: %p | RIP: %p\n", $rsp, $rbp, $rip
-end
+# 🔥 최적화 방지
+set print asm-demangle on
+set verbose on
+set follow-fork-mode child
 
-# 📍 메모리 모니터링 (광범위한 오프셋 탐색)
-define watch_state
-    set $i = 0
-    set $offset = 0
-    while ($i < 20)
-        set $addr = $base + $offset
-        printf "📍 [DEBUG] Monitoring address: %p | Offset: %d\n", $addr, $offset
-        if ($addr != 0)
-            printf "🔍 Value at %p: ", $addr
-            x/wx $addr
-        else
-            printf "❌ Invalid address detected.\n"
-        end
-        set $i = $i + 1
-        set $offset = $offset + 4   # 4바이트 단위로 확인
-    end
-end
+# 🧪 state 변수 정보 출력
+p &state
+p state
 
-# main 함수 진입 시 실행
+# ✅ state 감시 설정 (레지스터 및 메모리 모두 추적)
+watch state
+rwatch state
+awatch state
+
+# 📍 변경 사항 출력
 commands
     silent
-    printf "🚀 Starting register debug...\n"
-    debug_registers
-    printf "🚀 Starting state monitoring...\n"
-    watch_state
+    printf "📍 [DEBUG] state 변경 감지: %d (주소: %p)\n", state, &state
+    bt
+    info registers
     continue
 end
 
-# 프로그램 종료 직전 상태 확인
-define hookpost-main
-    debug_registers
-    watch_state
-end
-
 continue
+set logging off
+quit
