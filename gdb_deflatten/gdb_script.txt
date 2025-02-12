@@ -1,0 +1,48 @@
+file /home/dongho.lee/MODeflattener/MODeflattener/ll_file/cfg.O0.flatten_binary
+break main
+run < input.txt
+
+# 스택 포인터 저장
+set $base = $rsp
+printf "✅ [DEBUG] Stack base address: %p\n", $base
+
+# 🔍 주요 레지스터 추적 (RSP, RBP, RIP)
+define debug_registers
+    printf "🔍 RSP: %p | RBP: %p | RIP: %p\n", $rsp, $rbp, $rip
+end
+
+# 📍 메모리 모니터링 (광범위한 오프셋 탐색)
+define watch_state
+    set $i = 0
+    set $offset = 0
+    while ($i < 20)
+        set $addr = $base + $offset
+        printf "📍 [DEBUG] Monitoring address: %p | Offset: %d\n", $addr, $offset
+        if ($addr != 0)
+            printf "🔍 Value at %p: ", $addr
+            x/wx $addr
+        else
+            printf "❌ Invalid address detected.\n"
+        end
+        set $i = $i + 1
+        set $offset = $offset + 4   # 4바이트 단위로 확인
+    end
+end
+
+# main 함수 진입 시 실행
+commands
+    silent
+    printf "🚀 Starting register debug...\n"
+    debug_registers
+    printf "🚀 Starting state monitoring...\n"
+    watch_state
+    continue
+end
+
+# 프로그램 종료 직전 상태 확인
+define hookpost-main
+    debug_registers
+    watch_state
+end
+
+continue

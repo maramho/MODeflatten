@@ -7,6 +7,7 @@ from miasm.expression.expression import *
 from miasm.core.asmblock import *
 from miasm.arch.x86.arch import mn_x86
 from miasm.core.utils import encode_hex
+import json
 
 
 from argparse import ArgumentParser
@@ -16,6 +17,11 @@ import pprint
 from mod_utils import get_cff_info, find_state_var_usedefs, resolve_jump_target
 
 
+# 절대 경로 사용 (추천)
+
+#with open('state_changes.json', 'r') as file:
+#    state_changes = json.load(file)
+    
 def setup_logger(loglevel):
     FORMAT = '[%(levelname)s] %(message)s'
     logging.basicConfig(format=FORMAT)
@@ -118,33 +124,53 @@ def deflat(ad, func_info, loc_db):
             print(f"[WARNING] pre_dispatcher 블록 ({hex(pre_dispatcher)})을 찾지 못했습니다.")
 
     # 🔥 dispatcher 블록에서 state_var 찾기
+    
+    
+    
+    
+    with open('gdb_deflatten/state_changes.json', 'r') as file:
+        state_data = json.load(file)
+
+    state_offset = state_data['state_offset']
+    state_changes = state_data['state_changes']
+
+    print(f"[INFO] 추적된 state_offset: {state_offset}, 변경 내역: {state_changes}")
+    
+    
+    
     # 🔥 state_var 찾기 (JMP와 연결된 변수 추적
     for instr in dispatcher_blk.lines:
-        print(f"[DEBUG] dispatcher 명령어: {instr}")  # 모든 명령어 출력
+        print(f"[DEBUG] dispatcher 명령어: {instr}")
 
-        if instr.name in ["MOV", "CMP", "TEST", "SUB", "JMP", "LEA", "ADD", "XOR"]:  # 명령어 추가
+        if instr.name in ["MOV", "CMP", "TEST", "SUB", "JMP", "LEA", "ADD", "XOR"]:
             args = instr.get_args_expr()
-            if not args or len(args) < 1:
-                continue
+            if len(args) >= 2:
+                dest, src = args[0], args[1]
 
-            dest = args[0]
-            src = args[1] if len(args) > 1 else None
+                # MOV 명령어에서 메모리 참조인지 확인
+                if instr.name == "MOV" and isinstance(dest, ExprMem):
+                    potential_state_var = src
+                    if isinstance(potential_state_var, ExprId):
+                        print(f"[DEBUG] MOV 명령어에서 찾은 잠재적 state 변수: {potential_state_var}")
+                        state_var = potential_state_var
 
-            if instr.name == "JMP":
-                print(f"[DEBUG] JMP 명령어 발견: {instr}")
-                jmp_target = resolve_jump_target(main_asmcfg, loc_db, dest)
+                # CMP 명령어로도 추적 시도
+                if instr.name == "CMP" and isinstance(src, ExprId):
+                    print(f"[DEBUG] CMP 명령어에서 찾은 잠재적 state 변수: {src}")
+                    state_var = src
 
-                if jmp_target:
-                    print(f"[DEBUG] JMP 변환 완료: {dest} → {hex(jmp_target)}")
-                    state_var = jmp_target
-                else:
-                    print(f"[WARNING] JMP 대상 변환 실패: {instr}")
+    # 찾은 state 변수 출력
+    if state_var:
+        print(f"[INFO] 찾은 state 변수: {state_var}")
+    else:
+        print("[WARNING] state 변수를 찾지 못했습니다.")
+    return {}
 
-    if state_var is None:
-        print("[ERROR] dispatcher에서 state_var를 찾지 못했습니다.")
-        for instr in dispatcher_blk.lines:
-            print(f"[DEBUG] dispatcher 전체 명령어 확인: {instr}")  # 추가 출력
+    # ✅ GDB 수집한 state 값이 존재할 때만 패치 수행
+    if not should_deflatten(state_var.arg if isinstance(state_var, ExprInt) else 0):
+        print(f"[INFO] GDB 결과에 해당 state({state_var})가 없으므로 패치 건너뜁니다.")
         return {}
+
 
 
     print(f"[INFO] state_var: {state_var}")
@@ -299,17 +325,14 @@ if __name__ == '__main__':
                     # LocKey를 정수형 오프셋으로 변환
                     if isinstance(offset, LocKey):
                         offset = loc_db.get_location_offset(offset)
-                    fpatch.seek(offset - bin_base_addr)
-                    
-                    #fpatch.write(data)
 
-                fcn_end_time = time.time() - fcn_start_time
-                _log.info("PATCHING SUCCESSFUL for function @ %#x (%.2f secs)\n" % (ad, fcn_end_time))
-            else:
-                _log.error("PATCHING UNSUCCESSFUL for function @ %#x\n" % ad)
-
-        else:
-            _log.error(f"[ERROR] unable to deobfuscate func {hex(ad)} (cff score = {score})")
+                    # ✅ state 변화가 감지된 경우에만 패치 적용
+                    if should_deflatten(offset):
+                        print(f"[PATCH] {hex(offset)} 위치에 패치 적용 중...")
+                        fpatch.seek(offset - bin_base_addr)
+                        fpatch.write(data)
+                    else:
+                        print(f"[SKIP] {hex(offset)} 위치는 GDB 분석 결과에서 제외됨.")
 
 
 

@@ -1,0 +1,10 @@
+Reading symbols from /home/dongho.lee/MODeflattener/MODeflattener/ll_file/cfg.O0.flatten_binary...
+Breakpoint 1 at 0x1150: file cfg.cpp, line 3.
+
+Breakpoint 1, main () at cfg.cpp:3
+3	int main() {
+✅ [DEBUG] Stack base address: 0x7fffffffdaa8
+Proceed? (y or n) [answered Y; input not from terminal]
+Enter an integer: Result: 848
+[Inferior 1 (process 1836224) exited normally]
+(gdb) 
