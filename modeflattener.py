@@ -7,7 +7,12 @@ from miasm.expression.expression import *
 from miasm.core.asmblock import *
 from miasm.arch.x86.arch import mn_x86
 from miasm.core.utils import encode_hex
+from miasm.ir.ir import IRCFG
+from miasm.expression.expression import ExprId, ExprInt, ExprMem
+
+
 import json
+import os
 
 
 from argparse import ArgumentParser
@@ -90,78 +95,89 @@ def setup_logger(loglevel):
 
     return logger
 
+
+
 def deflat(ad, func_info, loc_db):
+    """
+    Flattening 해제 함수: 정적 및 동적 분석 결합.
+    """
     main_asmcfg, main_ircfg = func_info
     machine = Machine(cont.arch)
     mdis = machine.dis_engine(cont.bin_stream, loc_db=loc_db)
 
-    print(f"[DEBUG] deflat() 실행 중: {hex(ad)}")
-    
-    with open('gdb_deflatten/state_changes.json', 'r') as file:
-        state_info = json.load(file)
+    print(f"[INFO] Deobfuscation 시작: {hex(ad)}")
 
-    state_address = int(state_info["state_address"], 16)
-    state_changes = state_info["state_changes"]  # 🔑 추가된 부분
+    # GDB에서 추출한 state 정보 불러오기
+    state_address = None
+    state_changes = []
+    state_json_path = "gdb_deflatten/state_changes.json"
 
-    print(f"[INFO] 추적된 state 주소: {hex(state_address)}, 변경 내역: {state_changes}")
-   
+    if os.path.exists(state_json_path):
+        with open(state_json_path, 'r') as file:
+            state_info = json.load(file)
+            state_address = int(state_info["state_address"], 16)
+            state_changes = state_info["state_changes"]
+
+        print(f"[INFO] GDB 추적된 state 주소: {hex(state_address)}, 변경 내역: {state_changes}")
+    else:
+        print("[WARNING] GDB state 정보를 찾을 수 없음. 정적 분석만 진행.")
+
+    # 정적 분석: relevant_blocks 및 dispatcher 찾기
     relevant_blocks, dispatcher, pre_dispatcher = get_cff_info(main_asmcfg, loc_db)
-    print(f"[DEBUG] get_cff_info() 완료, relevant_blocks 개수: {len(relevant_blocks)}")
 
     if dispatcher is None:
         print("[ERROR] dispatcher를 찾을 수 없음. 분석 중단.")
         return {}
 
+    # dispatcher 블록 찾기
     dispatcher_blk = main_asmcfg.getby_offset(dispatcher)
     if not dispatcher_blk:
         print(f"[ERROR] dispatcher 블록 ({hex(dispatcher)}) 찾기 실패")
         return {}
 
-    # 🔥 pre_dispatcher 탐색 (state_var 추적)
+    # dispatcher에서 state 변수를 찾기
     state_var = None
-    if pre_dispatcher is not None:
-        pre_dispatcher_blk = main_asmcfg.getby_offset(pre_dispatcher)
-        if pre_dispatcher_blk:
-            for instr in pre_dispatcher_blk.lines:
-                if "MOV" in instr.name and isinstance(instr.get_args_expr()[0], ExprMem):
-                    potential_state_var = instr.get_args_expr()[1]
-                    if isinstance(potential_state_var, ExprId):
-                        state_var = potential_state_var
-                        print(f"[DEBUG] pre_dispatcher에서 찾은 state_var: {state_var}")
-                        break
-        else:
-            print(f"[WARNING] pre_dispatcher 블록 ({hex(pre_dispatcher)})을 찾지 못했습니다.")
-
-    # 🔥 dispatcher 블록에서 state_var 찾기
-  
-    
-    # 🔥 state_var 찾기 (JMP와 연결된 변수 추적
     for instr in dispatcher_blk.lines:
-        print(f"[DEBUG] dispatcher 명령어: {instr}")
-
-        if instr.name in ["MOV", "CMP", "TEST", "SUB", "JMP", "LEA", "ADD", "XOR"]:
+        if instr.name == "MOV":
             args = instr.get_args_expr()
-            if len(args) >= 2:
-                dest, src = args[0], args[1]
+            if len(args) >= 2 and isinstance(args[0], ExprMem):
+                potential_state_var = args[0]
+                # 🔥 **주소 값으로 직접 비교하도록 수정 (Miasm 최신 버전 호환)**
+                if isinstance(potential_state_var, ExprMem) and potential_state_var.ptr == state_address:
+                    state_var = potential_state_var
+                    print(f"[DEBUG] dispatcher에서 state 변수 찾음: {state_var}")
+                    break
 
-                # MOV 명령어에서 메모리 참조인지 확인
-                if instr.name == "MOV" and isinstance(dest, ExprMem):
-                    potential_state_var = src
-                    if isinstance(potential_state_var, ExprId):
-                        print(f"[DEBUG] MOV 명령어에서 찾은 잠재적 state 변수: {potential_state_var}")
-                        state_var = potential_state_var
-
-                # CMP 명령어로도 추적 시도
-                if instr.name == "CMP" and isinstance(src, ExprId):
-                    print(f"[DEBUG] CMP 명령어에서 찾은 잠재적 state 변수: {src}")
-                    state_var = src
-
-    # 찾은 state 변수 출력
-    if state_var:
-        print(f"[INFO] 찾은 state 변수: {state_var}")
+    # GDB 데이터 기반으로 state 변수 보완
+    if state_var is None and state_address:
+        state_var = ExprMem(ExprInt(state_address, 64), 4)  # ✅ 최신 버전 호환 (size 추가)
+        print(f"[WARNING] dispatcher에서 state 변수를 찾지 못함. GDB 데이터 사용: {state_var}")
     else:
-        print("[WARNING] state 변수를 찾지 못했습니다.")
-    return {}
+        print(f"[INFO] 최종 결정된 state 변수: {state_var}")
+
+    # ✅ **find_and_patch_state_var 함수 추가**
+    patches = find_and_patch_state_var(main_ircfg, state_var)
+
+    return patches
+
+
+def find_and_patch_state_var(ircfg, state_var):
+    """
+    state 변수를 추적하고 패치를 적용하는 함수.
+    """
+    patches = {}
+
+    for addr, block in ircfg.blocks.items():
+        for instr in block:
+            if state_var in instr.get_r():
+                print(f"[DEBUG] state 변수를 읽는 블록 발견 @ {hex(addr)}: {instr}")
+            if state_var in instr.get_w():
+                print(f"[DEBUG] state 변수를 쓰는 블록 발견 @ {hex(addr)}: {instr}")
+                patches[addr] = b'\x90' * 5  # 예제: NOP 패치
+
+    return patches
+
+
 
     # ✅ GDB 수집한 state 값이 존재할 때만 패치 수행
     if not should_deflatten(state_var.arg if isinstance(state_var, ExprInt) else 0):
@@ -340,61 +356,47 @@ if __name__ == '__main__':
     
     
     
-    def get_cff_info(asmcfg, loc_db):
-        print("[DEBUG] get_cff_info() 실행 시작")
+def get_cff_info(asmcfg, loc_db):
+    """
+    Flattening된 블록을 분석하고 dispatcher 블록을 찾는 함수.
+    """
+    print("[DEBUG] get_cff_info() 실행 시작")
 
-        relevant_blocks = set()
-        dispatcher = None
-        pre_dispatcher = None
-        jmp_blocks = []
+    relevant_blocks = set()
+    dispatcher = None
+    pre_dispatcher = None
+    jmp_blocks = []
 
-        for block in asmcfg.blocks:
-            if not block.lines:
-                continue  # 빈 블록 건너뛰기
+    for block in asmcfg.blocks:
+        if not block.lines:
+            continue  # 빈 블록 스킵
 
-            block_addr = loc_db.get_location_offset(block.loc_key)
-            print(f"[DEBUG] 블록: {hex(block_addr)}")
+        block_addr = loc_db.get_location_offset(block.loc_key)
+        print(f"[DEBUG] 블록: {hex(block_addr)}")
 
-            for instr in block.lines:
-                if "MOV" in instr.name:
-                    args = instr.get_args_expr()
-                    if args and len(args) > 1 and isinstance(args[0], ExprMem) and isinstance(args[1], ExprInt):
-                        print(f"[DEBUG] 찾은 MOV: {instr}")
-                        relevant_blocks.add(block_addr)
+        for instr in block.lines:
+            if "MOV" in instr.name:
+                args = instr.get_args_expr()
+                if args and len(args) > 1 and isinstance(args[0], ExprMem) and isinstance(args[1], ExprInt):
+                    print(f"[DEBUG] 찾은 MOV: {instr}")
+                    relevant_blocks.add(block_addr)
 
-                if "JMP" in instr.name:
-                    jmp_target = instr.get_args_expr()[0]
-                    resolved_target = resolve_jump_target(asmcfg, loc_db, jmp_target)
-                    if resolved_target:
-                        print(f"[DEBUG] JMP 변환: {instr} → {hex(resolved_target)}")
-                        relevant_blocks.add(resolved_target)
-                    else:
-                        print(f"[WARNING] JMP 변환 실패: {instr}")
+            if "JMP" in instr.name:
+                jmp_blocks.append(block_addr)
 
-                    jmp_blocks.append(block_addr)
+    relevant_blocks = sorted(relevant_blocks)
 
-        # Dispatcher 블록 추출
-        dispatcher = jmp_blocks[0] if jmp_blocks else None
-        dispatcher_blk = asmcfg.loc_db.get_block(dispatcher) if dispatcher else None
+    # dispatcher는 가장 먼저 등장하는 JMP 블록
+    if jmp_blocks:
+        dispatcher = jmp_blocks[0]
+    else:
+        dispatcher = relevant_blocks[0] if relevant_blocks else None
 
-        # Dispatcher에서 state 변수 찾기
-        if dispatcher_blk:
-            for instr in dispatcher_blk.lines:
-                if instr.name == "MOV" and state_address in [arg.arg for arg in instr.get_args_expr() if isinstance(arg, ExprInt)]:
-                    print(f"[DEBUG] dispatcher에서 state 변수 찾음: {hex(state_address)}")
+    pre_dispatcher = relevant_blocks[1] if len(relevant_blocks) >= 2 else None
 
-        # 관련 블록이 없을 경우 전체 스캔
-        if not relevant_blocks:
-            print("[WARNING] relevant_blocks를 찾지 못했으므로, 전체 블록을 스캔합니다.")
-            relevant_blocks = {block.lines[0].offset for block in asmcfg.blocks if block.lines}
+    print(f"[DEBUG] get_cff_info() 종료, relevant_blocks 개수: {len(relevant_blocks)}")
+    print(f"[DEBUG] dispatcher: {dispatcher}, pre_dispatcher: {pre_dispatcher}")
 
-        relevant_blocks = sorted(relevant_blocks)
-        pre_dispatcher = relevant_blocks[1] if len(relevant_blocks) >= 2 else None
-
-        print(f"[DEBUG] get_cff_info() 종료, relevant_blocks 개수: {len(relevant_blocks)}")
-        print(f"[DEBUG] dispatcher: {dispatcher}, pre_dispatcher: {pre_dispatcher}")
-        print(f"[DEBUG] relevant_blocks: {[hex(addr) for addr in relevant_blocks]}")
-
-        return relevant_blocks, dispatcher, pre_dispatcher
+    return relevant_blocks, dispatcher, pre_dispatcher
 
 #test1#

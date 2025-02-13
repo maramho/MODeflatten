@@ -3,8 +3,8 @@
 -------------------------
 |    func : 0x1150    |
 -------------------------
-[DEBUG] deflat() 실행 중: 0x1150
-[INFO] 추적된 state 주소: 0x7fffffffda94, 변경 내역: [0, 0, 0, -1, -1]
+[INFO] Deobfuscation 시작: 0x1150
+[INFO] GDB 추적된 state 주소: 0x7fffffffda94, 변경 내역: [0, 0, 0, 2, 2, 2, -1, -1]
 [DEBUG] get_cff_info() 실행 시작
 [DEBUG] 블록: 0x1150
 [DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x2C], 0x0
@@ -754,10 +754,4 @@
 [DEBUG] 찾은 JMP: JMP        loc_key_32
 [DEBUG] get_cff_info() 종료, relevant_blocks 개수: 259
 [DEBUG] dispatcher: 4477, pre_dispatcher: 4477
-[DEBUG] get_cff_info() 완료, relevant_blocks 개수: 259
-[DEBUG] dispatcher 명령어: MOV        DWORD PTR [RSP + 0x24], 0x0
-[DEBUG] dispatcher 명령어: MOV        DWORD PTR [RSP + 0x20], 0x0
-[DEBUG] dispatcher 명령어: MOV        DWORD PTR [RSP + 0x30], 0x1535C
-[DEBUG] dispatcher 명령어: MOV        DWORD PTR [RSP + 0x34], 0x6724
-[DEBUG] dispatcher 명령어: JMP        loc_key_32
-[WARNING] state 변수를 찾지 못했습니다.
+[WARNING] dispatcher에서 state 변수를 찾지 못함. GDB 데이터 사용: @4[0x7FFFFFFFDA94]
