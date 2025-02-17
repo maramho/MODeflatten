@@ -1,37 +1,26 @@
-set confirm off
-set pagination off
+set logging file gdb_output.log
 set logging on
-
 file /home/dongho.lee/MODeflattener/MODeflattener/ll_file/cfg.O0.flatten_binary
-break main
+break *0x555555555150  
 run < input.txt
 
-# ASLR 비활성화 및 최적화 해제
-set disable-randomization on
-set environment LD_BIND_NOW 1
+# Flattening 특유의 패턴 감지
+disassemble main
+info registers
 
-# 🔥 최적화 방지
-set print asm-demangle on
-set verbose on
-set follow-fork-mode child
-
-# 🧪 state 변수 정보 출력
-p &state
-p state
-
-# ✅ state 감시 설정 (레지스터 및 메모리 모두 추적)
-watch state
-rwatch state
-awatch state
-
-# 📍 변경 사항 출력
+# 특정 메모리 감시 (state 변수의 변경 감지)
+watch *(int*)0x7fffffffda94
 commands
     silent
-    printf "📍 [DEBUG] state 변경 감지: %d (주소: %p)\n", state, &state
+    printf "📍 [DEBUG] state 변경 감지: %d (주소: %p)\n", *(int*)0x7fffffffda94, &(*(int*)0x7fffffffda94)
     bt
     info registers
     continue
 end
+
+# JMP 명령어 분석
+find /b 0x555555555000, +0x500 jmp
+find /b 0x555555555000, +0x500 mov
 
 continue
 set logging off

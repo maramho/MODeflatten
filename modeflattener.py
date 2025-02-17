@@ -10,7 +10,6 @@ from miasm.core.utils import encode_hex
 from miasm.ir.ir import IRCFG
 from miasm.expression.expression import ExprId, ExprInt, ExprMem
 
-
 import json
 import os
 
@@ -107,7 +106,7 @@ def deflat(ad, func_info, loc_db):
 
     print(f"[INFO] Deobfuscation 시작: {hex(ad)}")
 
-    # GDB에서 추출한 state 정보 불러오기
+    # GDB에서 추출한 state 정보 직접 지정
     state_address = None
     state_changes = []
     state_json_path = "gdb_deflatten/state_changes.json"
@@ -117,66 +116,108 @@ def deflat(ad, func_info, loc_db):
             state_info = json.load(file)
             state_address = int(state_info["state_address"], 16)
             state_changes = state_info["state_changes"]
-
         print(f"[INFO] GDB 추적된 state 주소: {hex(state_address)}, 변경 내역: {state_changes}")
     else:
-        print("[WARNING] GDB state 정보를 찾을 수 없음. 정적 분석만 진행.")
+        print("[WARNING] GDB state 정보를 찾을 수 없음. 수동 설정 적용.")
 
-    # 정적 분석: relevant_blocks 및 dispatcher 찾기
+    # ✅ 직접 `$rsp+0x34`를 state 변수로 강제 지정
+    state_var = ExprMem(ExprOp('ADD', ExprId('RSP', 64), ExprInt(0x34, 64)), 4)
+    print(f"[INFO] 강제 설정된 state 변수: {state_var}")
+
+    # dispatcher 탐색
     relevant_blocks, dispatcher, pre_dispatcher = get_cff_info(main_asmcfg, loc_db)
-
     if dispatcher is None:
         print("[ERROR] dispatcher를 찾을 수 없음. 분석 중단.")
         return {}
 
-    # dispatcher 블록 찾기
     dispatcher_blk = main_asmcfg.getby_offset(dispatcher)
     if not dispatcher_blk:
         print(f"[ERROR] dispatcher 블록 ({hex(dispatcher)}) 찾기 실패")
         return {}
 
-    # dispatcher에서 state 변수를 찾기
-    state_var = None
-    for instr in dispatcher_blk.lines:
-        if instr.name == "MOV":
-            args = instr.get_args_expr()
-            if len(args) >= 2 and isinstance(args[0], ExprMem):
-                potential_state_var = args[0]
-                # 🔥 **주소 값으로 직접 비교하도록 수정 (Miasm 최신 버전 호환)**
-                if isinstance(potential_state_var, ExprMem) and potential_state_var.ptr == state_address:
-                    state_var = potential_state_var
-                    print(f"[DEBUG] dispatcher에서 state 변수 찾음: {state_var}")
-                    break
-
-    # GDB 데이터 기반으로 state 변수 보완
-    if state_var is None and state_address:
-        state_var = ExprMem(ExprInt(state_address, 64), 4)  # ✅ 최신 버전 호환 (size 추가)
-        print(f"[WARNING] dispatcher에서 state 변수를 찾지 못함. GDB 데이터 사용: {state_var}")
-    else:
-        print(f"[INFO] 최종 결정된 state 변수: {state_var}")
-
-    # ✅ **find_and_patch_state_var 함수 추가**
+    # Flattening 해제 시도
     patches = find_and_patch_state_var(main_ircfg, state_var)
-
     return patches
 
 
-def find_and_patch_state_var(ircfg, state_var):
+
+
+
+def apply_deflattening(main_ircfg, state_var, state_changes):
     """
-    state 변수를 추적하고 패치를 적용하는 함수.
+    Flattening 해제 로직을 적용하여 패치를 생성하는 함수.
     """
     patches = {}
 
-    for addr, block in ircfg.blocks.items():
-        for instr in block:
-            if state_var in instr.get_r():
-                print(f"[DEBUG] state 변수를 읽는 블록 발견 @ {hex(addr)}: {instr}")
-            if state_var in instr.get_w():
-                print(f"[DEBUG] state 변수를 쓰는 블록 발견 @ {hex(addr)}: {instr}")
-                patches[addr] = b'\x90' * 5  # 예제: NOP 패치
+    for block_addr, block in main_ircfg.blocks.items():
+        for assignblk in block:
+            for dst, src in assignblk.items():
+                # state_var가 사용되는지 확인
+                if state_var == dst or state_var == src:
+                    print(f"[INFO] State variable 사용 발견: {assignblk}")
+
+                    # state_changes 리스트에 있는 값을 참조
+                    new_value = state_changes.pop(0) if state_changes else None
+
+                    # NOP 패치 적용
+                    if new_value is not None and new_value < 0:
+                        patches[block_addr] = b'\x90' * 5
+                        print(f"[PATCH] {hex(block_addr)}에 NOP 패치 적용.")
+                    else:
+                        print(f"[SKIP] {hex(block_addr)}에 패치 미적용.")
 
     return patches
 
+
+
+def find_and_patch_state_var(main_ircfg, state_var):
+    patches = []
+    target_mov_pattern = "@32[RSP + 0x34]"
+
+    for block_addr, block in main_ircfg.blocks.items():
+        assignblks = block.assignblks
+
+        # LocKey를 문자열로 출력
+        block_addr_str = str(block_addr)
+
+        if isinstance(assignblks, tuple):
+            for assignblk in assignblks:
+                print(f"[DEBUG] assignblk: {assignblk}")
+                if target_mov_pattern in str(assignblk):
+                    print(f"[DEBUG] MOV 명령어 발견: {assignblk}")
+                    src_value = str(assignblk).split('=')[-1].strip()
+                    patches.append((block_addr_str, src_value))
+                    print(f"[DEBUG] 패치 대상 추가: 블록 {str(block_addr)}, 값: {src_value}")
+
+                    
+        else:
+            for dst, src in assignblks.items():
+                if target_mov_pattern in str(dst):
+                    patches.append((block_addr_str, src))
+                    print(f"[DEBUG] 패치 대상 발견: 블록 {block_addr_str}, 값: {src}")
+
+    if not patches:
+        print("[ERROR] state 변수를 찾지 못했습니다.")
+    else:
+        print(f"[INFO] 패치된 state 변수 수: {len(patches)}")
+
+    return patches
+
+
+
+
+
+
+
+def should_deflatten(offset):
+    """
+    특정 오프셋이 Flattening 구조에 해당하는지 확인
+    """
+    # 예제 조건: dispatcher 주변이나 특정 패턴 탐지
+    if offset in [0x1150, 0x4477]:  # 예제 주소, 필요시 수정
+        print(f"[INFO] Flattening 감지: offset {hex(offset)}")
+        return True
+    return False
 
 
     # ✅ GDB 수집한 state 값이 존재할 때만 패치 수행
@@ -319,33 +360,48 @@ if __name__ == '__main__':
         asmcfg = all_funcs_blocks[ad][0]
         score = calc_flattening_score(asmcfg)
 
-        print(f"[DEBUG] Function {hex(ad)} Flattening Score: {score}")  # 🔥 점수 출력
+        print(f"[DEBUG] Function {hex(ad)} Flattening Score: {score}")
 
-        # 강제 패치 실행 (Flattening Score 무조건 1.0으로 설정)
+        # 강제 패치 실행
         if score < 0.9:
             print(f"[WARNING] Flattening Score {score}가 낮음 → 강제 패치 실행")
             score = 1.0
 
         if score > 0.9:
             print('-------------------------')
-            print('|    func : %#x    |' % ad)
+            print(f'|    func : {hex(ad)}    |')
             print('-------------------------')
             fcn_start_time = time.time()
             patches = deflat(ad, all_funcs_blocks[ad], loc_db)
 
             if patches:
-                for offset, data in patches.items():
-                    # LocKey를 정수형 오프셋으로 변환
-                    if isinstance(offset, LocKey):
-                        offset = loc_db.get_location_offset(offset)
+                # patches 리스트에서 딕셔너리 생성
+                # patches 리스트에서 딕셔너리 생성
+                patch_dict = {}
+                for patch in patches:
+                    offset, data = patch
+                    # offset이 문자열일 경우 정수형으로 변환
+                    try:
+                        patch_dict[int(offset, 16) if isinstance(offset, str) else offset] = data
+                    except ValueError:
+                        print(f"[ERROR] Invalid offset: {offset}")
 
-                    # ✅ state 변화가 감지된 경우에만 패치 적용
-                    if should_deflatten(offset):
-                        print(f"[PATCH] {hex(offset)} 위치에 패치 적용 중...")
-                        fpatch.seek(offset - bin_base_addr)
-                        fpatch.write(data)
-                    else:
-                        print(f"[SKIP] {hex(offset)} 위치는 GDB 분석 결과에서 제외됨.")
+                # 딕셔너리의 아이템을 바로 사용
+                for offset, data in patch_dict.items():
+                    try:
+                        # ✅ state 변화가 감지된 경우에만 패치 적용
+                        if should_deflatten(offset):
+                            print(f"[PATCH] {hex(offset)} 위치에 패치 적용 중...")
+                            fpatch.seek(offset - bin_base_addr)
+                            fpatch.write(data)
+                        else:
+                            print(f"[SKIP] {hex(offset)} 위치는 GDB 분석 결과에서 제외됨.")
+                    except TypeError as e:
+                        print(f"[ERROR] {e} (offset: {offset}, type: {type(offset)})")
+
+
+
+
 
 
 
