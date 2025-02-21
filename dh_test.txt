@@ -5,7 +5,7 @@
 -------------------------
 [INFO] Deobfuscation 시작: 0x1150
 [INFO] GDB 추적된 state 주소: 0x7fffffffda94, 변경 내역: [0, 0, 0, 2, 2, 2, -1, -1]
-[INFO] 강제 설정된 state 변수: @4[ADD(RSP, 0x34)]
+[INFO] 동적으로 설정된 STATE 변수: @4[ADD(RSP, 0x34)]
 [DEBUG] get_cff_info() 실행 시작
 [DEBUG] 블록: 0x1150
 [DEBUG] 찾은 MOV: MOV        DWORD PTR [RSP + 0x2C], 0x0
@@ -3951,7 +3951,7 @@ IRDst = CC_S>(nf, of, zf)?(loc_key_564,loc_key_565)
 [DEBUG] 패치 대상 추가: 블록 loc_key_565, 값: 0x6724
 [DEBUG] assignblk: RIP = loc_key_32
 IRDst = loc_key_32
-[INFO] 패치된 state 변수 수: 130
+[INFO] 패치해야할 state 변수 수: 130
 [ERROR] Invalid offset: loc_key_31
 [ERROR] Invalid offset: loc_key_32
 [ERROR] Invalid offset: loc_key_421

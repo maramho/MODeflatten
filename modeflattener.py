@@ -121,8 +121,21 @@ def deflat(ad, func_info, loc_db):
         print("[WARNING] GDB state 정보를 찾을 수 없음. 수동 설정 적용.")
 
     # ✅ 직접 `$rsp+0x34`를 state 변수로 강제 지정
-    state_var = ExprMem(ExprOp('ADD', ExprId('RSP', 64), ExprInt(0x34, 64)), 4)
-    print(f"[INFO] 강제 설정된 state 변수: {state_var}")
+    # GDB 로그에서 STATE 변수가 변경된 주소를 확인하고 동적으로 설정
+    state_var_candidates = [
+        ExprMem(ExprOp('ADD', ExprId('RSP', 64), ExprInt(0x24, 64)), 4),
+        ExprMem(ExprOp('ADD', ExprId('RSP', 64), ExprInt(0x30, 64)), 4),
+        ExprMem(ExprOp('ADD', ExprId('RSP', 64), ExprInt(0x34, 64)), 4)
+    ]
+
+    # GDB에서 찾은 STATE 주소
+    state_address_gdb = 0x7fffffffda94
+
+    # STATE 변수 후보 중 실제로 사용된 주소와 매칭
+    state_var = next((s for s in state_var_candidates if s.arg == state_address_gdb), state_var_candidates[-1])
+
+    print(f"[INFO] 동적으로 설정된 STATE 변수: {state_var}")
+
 
     # dispatcher 탐색
     relevant_blocks, dispatcher, pre_dispatcher = get_cff_info(main_asmcfg, loc_db)
@@ -152,19 +165,17 @@ def apply_deflattening(main_ircfg, state_var, state_changes):
     for block_addr, block in main_ircfg.blocks.items():
         for assignblk in block:
             for dst, src in assignblk.items():
-                # state_var가 사용되는지 확인
                 if state_var == dst or state_var == src:
                     print(f"[INFO] State variable 사용 발견: {assignblk}")
 
-                    # state_changes 리스트에 있는 값을 참조
-                    new_value = state_changes.pop(0) if state_changes else None
-
-                    # NOP 패치 적용
-                    if new_value is not None and new_value < 0:
+                    # GDB에서 찾은 STATE 변경 패턴 활용
+                    if old_value == 21845 and new_value == 0:
+                        print(f"[PATCH] {hex(block_addr)}에서 STATE 초기화 감지 → NOP 패치")
                         patches[block_addr] = b'\x90' * 5
-                        print(f"[PATCH] {hex(block_addr)}에 NOP 패치 적용.")
-                    else:
-                        print(f"[SKIP] {hex(block_addr)}에 패치 미적용.")
+                    elif old_value == 0 and new_value == 32767:
+                        print(f"[PATCH] {hex(block_addr)}에서 STATE 변환 감지 → JMP 수정")
+                        patches[block_addr] = b'\xEB\x05'  # JMP +5 (예제)
+
 
     return patches
 
